@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="GUA" description="A personal writing site on language, stillness, and divination.">
+
+  <section class="home-hero">
+    <blockquote class="home-quote fade-in-slow">
+      Between stimulus and response there is a space.<br />
+      In that space is our freedom.
+    </blockquote>
+    <p class="home-attribution fade-in" style="animation-delay: 1.2s">— Viktor Frankl</p>
+  </section>
+
+  <section class="home-projects fade-in" style="animation-delay: 1.8s" aria-label="Projects">
+    <a href="/language" class="project-card" data-project="language">
+      <span class="project-label">Language</span>
+      <span class="project-desc">Natural language processing & the shape of meaning</span>
+    </a>
+    <a href="/stillness" class="project-card" data-project="stillness">
+      <span class="project-label">Stillness</span>
+      <span class="project-desc">Buddhism, meditation & contemplative practice</span>
+    </a>
+    <a href="/apokalyi" class="project-card" data-project="apokalyi">
+      <span class="project-label">ApokalYi</span>
+      <span class="project-desc">I-Ching, divination & oracular thought</span>
+    </a>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .home-hero {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-2xl) var(--space-lg);
+  }
+
+  .home-quote {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--text-primary);
+    border: none;
+    padding: 0;
+    margin: 0 0 var(--space-lg) 0;
+    max-width: 700px;
+  }
+
+  .home-attribution {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    opacity: 0;
+  }
+
+  .home-projects {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    max-width: var(--layout-width);
+    margin: 0 auto var(--space-2xl);
+    padding: 0 var(--space-lg);
+    opacity: 0;
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-xl) var(--space-lg);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .project-card:hover { transform: translateY(-2px); }
+  .project-card[data-project="language"]:hover { border-color: #6B7FA3; }
+  .project-card[data-project="stillness"]:hover { border-color: #7A9E87; }
+  .project-card[data-project="apokalyi"]:hover  { border-color: #A08B5B; }
+
+  .project-label {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+  }
+
+  .project-card[data-project="language"]:hover .project-label { color: #6B7FA3; }
+  .project-card[data-project="stillness"]:hover .project-label { color: #7A9E87; }
+  .project-card[data-project="apokalyi"]:hover .project-label  { color: #A08B5B; }
+
+  .project-desc {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 768px) {
+    .home-projects { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .home-hero { min-height: calc(100vh - 160px); }
+  }
+</style>

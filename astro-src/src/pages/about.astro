@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About" description="About the author.">
+  <article class="about-page content">
+    <header class="page-header fade-in">
+      <h1 class="page-title">About</h1>
+    </header>
+
+    <div class="about-body fade-in" style="animation-delay: 0.2s">
+      <p>
+        I write about language, silence, and the systems — human and computational — that try to hold meaning in place.
+      </p>
+      <p>
+        My thinking moves between three territories: the technical architecture of natural language processing, the contemplative traditions of Buddhism and meditation, and the ancient oracular practice of the I-Ching. They are more connected than they appear.
+      </p>
+      <p>
+        This site is a place to think out loud. Slowly, without urgency. I'm not trying to build an audience or maintain a posting schedule. I'm trying to write things I won't regret.
+      </p>
+
+      <hr />
+
+      <div class="currently-section">
+        <h2 class="currently-title">Currently</h2>
+        <ul class="currently-list">
+          <li><span class="currently-label">Reading</span> <span>The Glass Bead Game — Hermann Hesse</span></li>
+          <li><span class="currently-label">Thinking about</span> <span>The relationship between attention in transformers and attention in meditation</span></li>
+          <li><span class="currently-label">Practicing</span> <span>Daily sitting, 30 minutes</span></li>
+        </ul>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .about-page {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 300;
+  }
+
+  .about-body p {
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+
+  .about-body hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: var(--space-2xl) 0;
+  }
+
+  .currently-title {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-lg);
+    font-weight: 400;
+  }
+
+  .currently-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .currently-list li {
+    display: flex;
+    gap: var(--space-lg);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .currently-label {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    min-width: 120px;
+    flex-shrink: 0;
+    padding-top: 0.15em;
+  }
+</style>

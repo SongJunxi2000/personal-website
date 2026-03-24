@@ -1,0 +1,227 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  project?: 'language' | 'stillness' | 'apokalyi';
+  isPost?: boolean;
+}
+
+const { title, description = 'A personal writing site.', project, isPost = false } = Astro.props;
+const siteTitle = 'GUA';
+---
+
+<!doctype html>
+<html lang="en" data-project={project} data-lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title === siteTitle ? title : `${title} — ${siteTitle}`}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Apply saved language preference before paint to avoid flash -->
+    <script is:inline>
+      const saved = localStorage.getItem('lang') || 'en';
+      document.documentElement.setAttribute('data-lang', saved);
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="container" aria-label="Main navigation">
+        <a href="/" class="nav-home" aria-label="Home">○</a>
+        <div class="nav-links">
+          <a href="/language" class="nav-link link-animated" data-project-nav="language">Language</a>
+          <a href="/stillness" class="nav-link link-animated" data-project-nav="stillness">Stillness</a>
+          <a href="/apokalyi" class="nav-link link-animated" data-project-nav="apokalyi">ApokalYi</a>
+          <a href="/about" class="nav-link link-animated">About</a>
+          <a href="/connect" class="nav-link link-animated">Connect</a>
+        </div>
+        <button class="lang-toggle" id="lang-toggle" aria-label="Switch language" style={isPost ? '' : 'display:none'}>
+          <span class="lang-option" data-for="en">EN</span>
+          <span class="lang-sep">/</span>
+          <span class="lang-option" data-for="zh">中</span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>一期一会 · {new Date().getFullYear()}</span>
+      </div>
+    </footer>
+
+    <script define:vars={{ project }}>
+      // Active nav
+      const path = window.location.pathname;
+      document.querySelectorAll('.nav-link').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && (path === href || (href !== '/' && path.startsWith(href)))) {
+          link.classList.add('active');
+        }
+      });
+
+      if (project) {
+        document.querySelectorAll(`[data-project-nav="${project}"]`).forEach(el => {
+          el.classList.add('project-active');
+        });
+      }
+
+      // Language toggle
+      function applyLang(lang) {
+        document.documentElement.setAttribute('data-lang', lang);
+        localStorage.setItem('lang', lang);
+        document.querySelectorAll('.lang-option').forEach(el => {
+          el.classList.toggle('lang-active', el.dataset.for === lang);
+        });
+      }
+
+      // Init toggle state
+      const currentLang = document.documentElement.getAttribute('data-lang') || 'en';
+      document.querySelectorAll('.lang-option').forEach(el => {
+        el.classList.toggle('lang-active', el.dataset.for === currentLang);
+      });
+
+      document.getElementById('lang-toggle')?.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-lang') || 'en';
+        applyLang(current === 'en' ? 'zh' : 'en');
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  /* ─── Header & Nav ───────────────────────────────────────── */
+  .site-header {
+    padding: var(--space-lg) 0;
+  }
+
+  .site-header nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+  }
+
+  .nav-home {
+    font-size: 1.4rem;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .nav-home:hover {
+    color: var(--accent);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+    flex: 1;
+  }
+
+  .nav-link {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .nav-link::after {
+    background-color: var(--accent);
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--text-primary);
+  }
+
+  .nav-link.project-active {
+    color: var(--accent);
+  }
+
+  /* ─── Language Toggle ────────────────────────────────────── */
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .lang-option {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+    transition: color 0.3s ease;
+    line-height: 1;
+  }
+
+  .lang-option.lang-active {
+    color: var(--text-primary);
+  }
+
+  .lang-sep {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    line-height: 1;
+  }
+
+  /* ─── Footer ─────────────────────────────────────────────── */
+  .site-footer {
+    margin-top: var(--space-3xl);
+    padding: var(--space-xl) 0 var(--space-lg);
+    border-top: 1px solid var(--border);
+  }
+
+  .site-footer .container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .site-footer span {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── Mobile Nav ─────────────────────────────────────────── */
+  @media (max-width: 640px) {
+    .site-header nav {
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .nav-links {
+      gap: var(--space-md);
+      order: 3;
+      width: 100%;
+    }
+
+    .lang-toggle {
+      margin-left: auto;
+      order: 2;
+    }
+
+    .nav-link {
+      font-size: 0.75rem;
+    }
+  }
+</style>

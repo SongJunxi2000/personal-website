@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectIndex from '../../components/ProjectIndex.astro';
+
+const modules = import.meta.glob('../../content/language/*.md', { eager: true });
+
+const posts = Object.entries(modules)
+  .map(([path, mod]: [string, any]) => ({
+    slug: path.split('/').pop()?.replace('.md', '') ?? '',
+    title: mod.frontmatter.title,
+    date: mod.frontmatter.date,
+    excerpt: mod.frontmatter.excerpt,
+    url: `/language/${path.split('/').pop()?.replace('.md', '')}`,
+  }))
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+---
+
+<BaseLayout
+  title="Language"
+  description="Writing on natural language processing, linguistics, and the shape of meaning."
+  project="language"
+>
+  <ProjectIndex
+    project="language"
+    title="Language"
+    intro="On natural language processing, the strangeness of how meaning is encoded in text, and what it might mean for a machine — or a person — to understand."
+    posts={posts}
+  />
+</BaseLayout>

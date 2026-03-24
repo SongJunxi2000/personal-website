@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectIndex from '../../components/ProjectIndex.astro';
+
+const modules = import.meta.glob('../../content/apokalyi/*.md', { eager: true });
+
+const posts = Object.entries(modules)
+  .map(([path, mod]: [string, any]) => ({
+    slug: path.split('/').pop()?.replace('.md', '') ?? '',
+    title: mod.frontmatter.title,
+    date: mod.frontmatter.date,
+    excerpt: mod.frontmatter.excerpt,
+    url: `/apokalyi/${path.split('/').pop()?.replace('.md', '')}`,
+  }))
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+---
+
+<BaseLayout
+  title="ApokalYi"
+  description="Writing on I-Ching, divination, and oracular thought."
+  project="apokalyi"
+>
+  <ProjectIndex
+    project="apokalyi"
+    title="ApokalYi"
+    intro="On I-Ching, divination, and the oracular tradition. Notes on reading the world as a text — ancient, associative, and still speaking."
+    posts={posts}
+  />
+</BaseLayout>

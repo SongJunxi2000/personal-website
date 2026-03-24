@@ -1,0 +1,228 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  title_zh?: string;
+  date: string;
+  excerpt?: string;
+  project: 'language' | 'stillness' | 'apokalyi';
+  readingTime?: number;
+  autoTranslated?: boolean;
+}
+
+const { title, title_zh, date, excerpt, project, readingTime, autoTranslated } = Astro.props;
+
+const projectLabels = {
+  language: 'Language',
+  stillness: 'Stillness',
+  apokalyi: 'ApokalYi',
+};
+
+const projectRoutes = {
+  language: '/language',
+  stillness: '/stillness',
+  apokalyi: '/apokalyi',
+};
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={title} description={excerpt} project={project} isPost={true}>
+  <!-- Reading progress bar -->
+  <div class="reading-progress" id="reading-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+  <article class="post-article content">
+    <header class="post-header fade-in">
+      <a href={projectRoutes[project]} class="breadcrumb">← {projectLabels[project]}</a>
+      {autoTranslated && (
+        <span class="auto-translated-badge">Auto-translated — pending review</span>
+      )}
+      <div data-lang="en"><h1 class="post-title">{title}</h1></div>
+      {title_zh && <div data-lang="zh"><h1 class="post-title">{title_zh}</h1></div>}
+      {!title_zh && <div data-lang="zh"><h1 class="post-title">{title}</h1></div>}
+      <div class="post-meta">
+        <time datetime={date}>{formattedDate}</time>
+        {readingTime && <span class="reading-time">{readingTime} min read</span>}
+      </div>
+    </header>
+
+    <div class="post-body fade-in" style="animation-delay: 0.2s">
+      <slot />
+    </div>
+  </article>
+
+  <!-- Back to top -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script>
+    // Reading progress bar
+    const bar = document.getElementById('reading-progress');
+    const btn = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+      if (bar) bar.style.width = `${progress}%`;
+      if (btn) btn.classList.toggle('visible', progress > 50);
+    });
+
+    if (btn) {
+      btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  /* ─── Reading Progress Bar ───────────────────────────────── */
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background-color: var(--reading-progress);
+    z-index: 100;
+    transition: width 0.1s linear;
+  }
+
+  /* ─── Article Layout ─────────────────────────────────────── */
+  .post-article {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+  }
+
+  /* ─── Header ─────────────────────────────────────────────── */
+  .breadcrumb {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    margin-bottom: var(--space-lg);
+    transition: color 0.3s ease;
+  }
+
+  .breadcrumb:hover {
+    color: var(--accent);
+  }
+
+  .post-title {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: var(--space-md);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .reading-time::before {
+    content: '·';
+    margin-right: var(--space-md);
+  }
+
+  /* ─── Post Body ──────────────────────────────────────────── */
+  .post-body :global(p) {
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.8;
+    margin-bottom: 1.8em;
+    color: var(--text-primary);
+  }
+
+  .post-body :global(h2) {
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+    margin-top: 2.5em;
+    margin-bottom: 0.8em;
+  }
+
+  .post-body :global(h3) {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    margin-top: 2em;
+    margin-bottom: 0.6em;
+  }
+
+  .post-body :global(blockquote) {
+    border-left: 2px solid var(--accent);
+    padding-left: var(--space-lg);
+    margin: var(--space-xl) 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    font-style: italic;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+
+  .post-body :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.3s ease;
+  }
+
+  .post-body :global(a:hover) {
+    text-decoration-color: var(--accent);
+  }
+
+  .post-body :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: var(--space-xl) 0;
+  }
+
+  /* ─── Back to Top ────────────────────────────────────────── */
+  .back-to-top {
+    position: fixed;
+    bottom: var(--space-xl);
+    right: var(--space-xl);
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-tertiary);
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, color 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .back-to-top:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .back-to-top {
+      right: var(--space-lg);
+      bottom: var(--space-lg);
+    }
+  }
+</style>

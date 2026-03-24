@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Connect" description="Get in touch.">
+  <section class="connect-page content">
+    <header class="page-header fade-in">
+      <h1 class="page-title">Connect</h1>
+      <p class="page-intro">If something here resonated, I'd be glad to hear from you.</p>
+    </header>
+
+    <div class="links-section fade-in" style="animation-delay: 0.2s">
+      <a href="mailto:hello@example.com" class="contact-link link-animated">hello@example.com</a>
+
+      <div class="social-links" role="list">
+        <a href="#" class="social-link link-animated" role="listitem">GitHub</a>
+        <a href="#" class="social-link link-animated" role="listitem">Twitter</a>
+        <a href="#" class="social-link link-animated" role="listitem">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .connect-page {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 300;
+    margin-bottom: var(--space-md);
+  }
+
+  .page-intro {
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 1.8vw, 1.15rem);
+    font-style: italic;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .links-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .contact-link {
+    font-family: var(--font-serif);
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    color: var(--text-primary);
+  }
+
+  .social-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .social-link {
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+  }
+
+  .social-link:hover {
+    color: var(--text-primary);
+  }
+</style>

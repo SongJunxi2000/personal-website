@@ -1,0 +1,254 @@
+/* ─── Google Fonts ─────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap');
+
+/* ─── Design Tokens ────────────────────────────────────────── */
+:root {
+  /* Colors — light mode */
+  --bg:               #F5F1EB;
+  --bg-subtle:        #EDE8E0;
+  --text-primary:     #2C2C2C;
+  --text-secondary:   #8A8478;
+  --text-tertiary:    #B5AFA6;
+  --accent:           #7C6F5B;
+  --accent-hover:     #5C5245;
+  --border:           #DDD7CE;
+  --reading-progress: #C4B9A8;
+
+  /* Spacing */
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:   16px;
+  --space-lg:   32px;
+  --space-xl:   64px;
+  --space-2xl:  128px;
+  --space-3xl:  192px;
+
+  /* Typography */
+  --font-serif:  'Cormorant Garamond', Georgia, serif;
+  --font-body:   'Libre Baskerville', Georgia, serif;
+  --font-ui:     'Inter', system-ui, sans-serif;
+
+  /* Layout */
+  --content-width:  680px;
+  --layout-width:   960px;
+}
+
+/* ─── Project Accent Overrides ─────────────────────────────── */
+[data-project="language"] {
+  --accent:       #6B7FA3;
+  --accent-hover: #4E6285;
+  --reading-progress: #8FA3C2;
+}
+
+[data-project="stillness"] {
+  --accent:       #7A9E87;
+  --accent-hover: #5C8069;
+  --reading-progress: #9ABBA6;
+}
+
+[data-project="apokalyi"] {
+  --accent:       #A08B5B;
+  --accent-hover: #7D6C41;
+  --reading-progress: #BEA87A;
+}
+
+/* ─── Dark Mode ─────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:             #1A1918;
+    --bg-subtle:      #242220;
+    --text-primary:   #E8E2D9;
+    --text-secondary: #8A8478;
+    --text-tertiary:  #5A5650;
+    --accent:         #B5A48A;
+    --accent-hover:   #D4C5A9;
+    --border:         #3A3634;
+    --reading-progress: #5A5245;
+  }
+
+  [data-project="language"] {
+    --accent:       #8FA3C2;
+    --accent-hover: #B0C3D9;
+  }
+
+  [data-project="stillness"] {
+    --accent:       #9ABBA6;
+    --accent-hover: #B8D4C3;
+  }
+
+  [data-project="apokalyi"] {
+    --accent:       #C4A96E;
+    --accent-hover: #D9C08F;
+  }
+}
+
+/* ─── Reduced Motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Reset & Base ──────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ─── Typography ────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+p {
+  margin-bottom: 1.6em;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+blockquote {
+  border-left: 2px solid var(--border);
+  padding-left: var(--space-lg);
+  margin: var(--space-xl) 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+  font-style: italic;
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+/* ─── Layout Utilities ──────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--layout-width);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.content {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+/* ─── Link Underline Animation ──────────────────────────────── */
+.link-animated {
+  position: relative;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.link-animated::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--accent);
+  transition: width 0.3s ease-in-out;
+}
+
+.link-animated:hover::after {
+  width: 100%;
+}
+
+.link-animated:hover {
+  color: var(--text-primary);
+}
+
+/* ─── Bilingual Visibility (post body only) ─────────────────── */
+/*
+  Language toggle only affects .post-body — all other site UI stays in English.
+  Wrap post content in <div data-lang="en"> and <div data-lang="zh"> inside the post file.
+  The toggle sets [data-lang] on <html>; CSS handles show/hide within .post-body.
+*/
+html[data-lang="en"] .post-body [data-lang="zh"] { display: none; }
+html[data-lang="zh"] .post-body [data-lang="en"] { display: none; }
+html:not([data-lang]) .post-body [data-lang="zh"] { display: none; }
+
+/* Also toggle the post title in PostLayout */
+html[data-lang="en"] .post-header [data-lang="zh"] { display: none; }
+html[data-lang="zh"] .post-header [data-lang="en"] { display: none; }
+html:not([data-lang]) .post-header [data-lang="zh"] { display: none; }
+
+/* CJK typography adjustments — scoped to post body */
+html[data-lang="zh"] .post-body p,
+html[data-lang="zh"] .post-body li {
+  font-family: 'Libre Baskerville', 'Noto Serif SC', 'Source Han Serif SC', 'STSong', 'SimSun', serif;
+  line-height: 1.9;
+}
+
+html[data-lang="zh"] .post-body h2,
+html[data-lang="zh"] .post-body h3 {
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'STKaiti', serif;
+}
+
+/* Auto-translated draft badge */
+.auto-translated-badge {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border);
+  padding: 2px 6px;
+  margin-bottom: var(--space-lg);
+  opacity: 0.7;
+}
+
+/* ─── Fade-in Animation ─────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.fade-in-slow {
+  opacity: 0;
+  animation: fadeIn 1.5s ease-out forwards;
+}

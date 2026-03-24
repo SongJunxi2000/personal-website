@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { projectLabels } from '../../lib/posts';
+import type { Project } from '../../lib/posts';
+
+const modules = import.meta.glob('../../content/**/*.md', { eager: true });
+
+const posts = Object.entries(modules)
+  .map(([path, mod]: [string, any]) => {
+    const slug = path.split('/').pop()?.replace('.md', '') ?? '';
+    const fm = mod.frontmatter;
+    return {
+      slug,
+      title: fm.title,
+      date: fm.date,
+      excerpt: fm.excerpt,
+      project: fm.project as Project,
+      url: `/${fm.project}/${slug}`,
+    };
+  })
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+const projectColors: Record<Project, string> = {
+  language: '#6B7FA3',
+  stillness: '#7A9E87',
+  apokalyi: '#A08B5B',
+};
+---
+
+<BaseLayout title="Writing" description="All writing across Language, Stillness, and ApokalYi.">
+  <section class="writing-index content">
+    <header class="page-header fade-in">
+      <h1 class="page-title">Writing</h1>
+      <div class="filter-tabs" role="tablist" aria-label="Filter by project">
+        <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="filter-btn" data-filter="language" role="tab" aria-selected="false" style={`--btn-color: ${projectColors.language}`}>Language</button>
+        <button class="filter-btn" data-filter="stillness" role="tab" aria-selected="false" style={`--btn-color: ${projectColors.stillness}`}>Stillness</button>
+        <button class="filter-btn" data-filter="apokalyi" role="tab" aria-selected="false" style={`--btn-color: ${projectColors.apokalyi}`}>ApokalYi</button>
+      </div>
+    </header>
+
+    <ul class="post-list" role="list">
+      {posts.map((post, i) => (
+        <li class="post-item fade-in" style={`animation-delay: ${i * 0.08}s`} data-project={post.project}>
+          <a href={post.url} class="post-link">
+            <div class="post-meta-row">
+              <span class="post-project-label" style={`color: ${projectColors[post.project]}`}>
+                {projectLabels[post.project]}
+              </span>
+              <time class="post-date" datetime={post.date}>
+                {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+            </div>
+            <h2 class="post-title">{post.title}</h2>
+            {post.excerpt && <p class="post-excerpt">{post.excerpt}</p>}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <script>
+    const btns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+    const items = document.querySelectorAll<HTMLLIElement>('.post-item');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+
+        btns.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+
+        items.forEach(item => {
+          const show = filter === 'all' || item.dataset.project === filter;
+          item.style.display = show ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</BaseLayout>
+
+<style>
+  .writing-index {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 300;
+    margin-bottom: var(--space-lg);
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: var(--space-lg);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--space-md);
+  }
+
+  .filter-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    padding: 0 0 var(--space-sm) 0;
+    transition: color 0.3s ease;
+    position: relative;
+  }
+
+  .filter-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--btn-color, var(--text-primary));
+    transition: width 0.3s ease;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    color: var(--btn-color, var(--text-primary));
+  }
+
+  .filter-btn.active::after,
+  .filter-btn:hover::after {
+    width: 100%;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-link {
+    display: block;
+    padding: var(--space-xl) 0;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.3s ease;
+  }
+
+  .post-link:hover {
+    opacity: 0.7;
+  }
+
+  .post-link:hover .post-title {
+    transform: translateX(4px);
+  }
+
+  .post-meta-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .post-project-label {
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .post-date {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .post-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+    transition: transform 0.3s ease;
+  }
+
+  .post-excerpt {
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>
