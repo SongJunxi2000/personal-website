@@ -1,4 +1,4 @@
-export type Project = 'language' | 'stillness' | 'apokalyi';
+export type Project = 'startup' | 'language' | 'stillness' | 'apokalyi';
 
 export interface PostFrontmatter {
   title: string;
@@ -15,6 +15,7 @@ export interface Post {
 }
 
 export const projectLabels: Record<Project, string> = {
+  startup: 'Startup',
   language: 'Language',
   stillness: 'Stillness',
   apokalyi: 'ApokalYi',
