@@ -58,7 +58,7 @@ When the user says they have added a new post (or drops a new `.md` file into a 
 - Read the entire file including frontmatter
 
 ### Step 2 — Proofread the original
-- Check for: grammar, clarity, consistency of voice, broken Markdown syntax, missing frontmatter fields
+- Check for: grammar, clarity, consistency of voice, broken Markdown syntax, missing frontmatter fields, concise
 - Report issues inline with suggested corrections
 - Ask the user to confirm fixes before applying
 
