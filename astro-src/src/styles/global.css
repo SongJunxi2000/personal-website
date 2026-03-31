@@ -279,8 +279,7 @@ pre {
   line-height: 1.6;
 }
 
-pre.astro-code,
-pre.astro-code-themes,
+/* Span colors use Shiki CSS vars — only spans get transparent bg */
 pre.astro-code span,
 pre.astro-code-themes span {
   color: var(--shiki-light) !important;
@@ -294,8 +293,6 @@ pre.astro-code-themes span {
     background-color: #141312 !important;
   }
 
-  pre.astro-code,
-  pre.astro-code-themes,
   pre.astro-code span,
   pre.astro-code-themes span {
     color: var(--shiki-dark) !important;
