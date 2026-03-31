@@ -1,5 +1,5 @@
 /* ─── Google Fonts ─────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* ─── Design Tokens ────────────────────────────────────────── */
 :root {
@@ -27,6 +27,7 @@
   --font-serif:  'Cormorant Garamond', Georgia, serif;
   --font-body:   'Libre Baskerville', Georgia, serif;
   --font-ui:     'Inter', system-ui, sans-serif;
+  --font-mono:   'JetBrains Mono', 'Fira Code', monospace;
 
   /* Layout */
   --content-width:  680px;
@@ -223,6 +224,13 @@ html[data-lang="zh"] .post-body h3 {
   font-family: 'Cormorant Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'STKaiti', serif;
 }
 
+/* CJK override for Language posts — keep Inter even in Chinese mode */
+html[data-lang="zh"] [data-project="language"] .post-body p,
+html[data-lang="zh"] [data-project="language"] .post-body li {
+  font-family: var(--font-ui);
+  line-height: 1.75;
+}
+
 /* Auto-translated draft badge */
 .auto-translated-badge {
   display: inline-block;
@@ -251,4 +259,146 @@ html[data-lang="zh"] .post-body h3 {
 .fade-in-slow {
   opacity: 0;
   animation: fadeIn 1.5s ease-out forwards;
+}
+
+/* ─── Code Blocks (Shiki dual-theme) ─────────────────────────── */
+/*
+  Shiki with defaultColor:false outputs --shiki-light / --shiki-dark CSS vars.
+  We switch between them based on prefers-color-scheme and override
+  the background with our warm palette colors.
+*/
+pre.astro-code,
+pre.astro-code-themes,
+pre {
+  background-color: #E8E3DB !important;
+  border-radius: 6px;
+  padding: 18px 20px;
+  overflow-x: auto;
+  margin: 16px 0 20px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+pre.astro-code,
+pre.astro-code-themes,
+pre.astro-code span,
+pre.astro-code-themes span {
+  color: var(--shiki-light) !important;
+  background-color: transparent !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  pre.astro-code,
+  pre.astro-code-themes,
+  pre {
+    background-color: #141312 !important;
+  }
+
+  pre.astro-code,
+  pre.astro-code-themes,
+  pre.astro-code span,
+  pre.astro-code-themes span {
+    color: var(--shiki-dark) !important;
+  }
+}
+
+pre code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: rgba(107,127,163,0.1);
+  padding: 2px 5px;
+  border-radius: 3px;
+  color: var(--accent);
+}
+
+pre code {
+  color: inherit;
+  background: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  code {
+    background: rgba(143,163,194,0.1);
+  }
+}
+
+/* ─── Table of Contents ────────────────────────────────────── */
+.post-toc {
+  background: var(--bg-subtle);
+  border-radius: 6px;
+  padding: 14px 18px;
+  margin: 0 0 var(--space-xl);
+  font-size: 13px;
+}
+
+.post-toc summary {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-secondary);
+  list-style: none;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.post-toc summary::-webkit-details-marker {
+  display: none;
+}
+
+.post-toc ol {
+  margin-top: 10px;
+  padding-left: 18px;
+  line-height: 2;
+  color: var(--text-secondary);
+}
+
+.post-toc a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.post-toc a:hover {
+  text-decoration: underline;
+}
+
+/* ─── Series Navigation ────────────────────────────────────── */
+.series-nav {
+  margin: var(--space-xl) 0 0;
+  padding: var(--space-md) 0;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--text-tertiary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.series-nav a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.series-nav a:hover {
+  color: var(--accent-hover);
+}
+
+/* ─── KaTeX Math ───────────────────────────────────────────── */
+.katex-display {
+  margin: 1.2em 0;
+  overflow-x: auto;
+}
+
+.katex {
+  font-size: 1.05em;
 }
