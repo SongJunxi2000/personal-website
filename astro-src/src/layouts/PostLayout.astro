@@ -117,7 +117,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
   }
 
   .post-title {
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
     font-weight: 400;
     line-height: 1.15;
     margin-bottom: var(--space-md);
@@ -130,7 +130,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
     font-family: var(--font-ui);
     font-size: 0.8rem;
     color: var(--text-secondary);
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-lg);
     padding-bottom: var(--space-lg);
     border-bottom: 1px solid var(--border);
   }
@@ -187,6 +187,41 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
     border: none;
     border-top: 1px solid var(--border);
     margin: var(--space-xl) 0;
+  }
+
+  /* ─── Language (Technical) Post Overrides ─────────────────── */
+  /*
+    When data-project="language" is set on <html>, switch body text to Inter
+    for technical readability. Headings keep Cormorant Garamond.
+    These scoped rules ensure correct specificity over defaults above.
+  */
+  :global([data-project="language"]) .post-body {
+    font-family: var(--font-ui);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  :global([data-project="language"]) .post-body :global(p),
+  :global([data-project="language"]) .post-body :global(li) {
+    font-family: var(--font-ui);
+    font-size: 15px;
+    line-height: 1.75;
+    margin-bottom: 1.4em;
+  }
+
+  :global([data-project="language"]) .post-body :global(h2),
+  :global([data-project="language"]) .post-body :global(h3) {
+    font-family: var(--font-serif);
+  }
+
+  :global([data-project="language"]) .post-body :global(strong) {
+    font-weight: 600;
+  }
+
+  /* Also override CJK fallback for Language posts in Chinese mode */
+  :global(html[data-lang="zh"] [data-project="language"]) .post-body :global(p),
+  :global(html[data-lang="zh"] [data-project="language"]) .post-body :global(li) {
+    font-family: var(--font-ui);
   }
 
   /* ─── Back to Top ────────────────────────────────────────── */
