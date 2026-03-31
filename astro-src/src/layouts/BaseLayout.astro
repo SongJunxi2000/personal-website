@@ -20,6 +20,14 @@ const siteTitle = 'GUA';
     <meta name="description" content={description} />
     <title>{title === siteTitle ? title : `${title} — ${siteTitle}`}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {/* KaTeX math rendering for technical posts */}
+    {project === 'language' && (
+      <>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" is:inline></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" is:inline></script>
+      </>
+    )}
     <!-- Apply saved language preference before paint to avoid flash -->
     <script is:inline>
       const saved = localStorage.getItem('lang') || 'en';
@@ -90,6 +98,21 @@ const siteTitle = 'GUA';
         const current = document.documentElement.getAttribute('data-lang') || 'en';
         applyLang(current === 'en' ? 'zh' : 'en');
       });
+
+      // KaTeX auto-render for Language posts
+      if (project === 'language') {
+        document.addEventListener('DOMContentLoaded', () => {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+              ],
+              throwOnError: false,
+            });
+          }
+        });
+      }
     </script>
   </body>
 </html>
