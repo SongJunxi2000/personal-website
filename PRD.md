@@ -15,7 +15,7 @@ This is a personal website centered on writing, ideas, and contemplation. The de
 
 1. **Ma (間) — Negative space is content.** Whitespace is not empty — it is the most important design element. Margins and padding should be generous to the point of feeling luxurious.
 2. **Wabi-sabi — Beauty in imperfection.** Avoid overly polished, corporate aesthetics. Favor organic textures, slightly asymmetric layouts, and natural warmth.
-3. **Ichigo ichie (一期一会) — This moment, only once.** Subtle, non-repeating micro-interactions that reward slow, attentive browsing. Nothing flashy.
+3. **应无所住 — When the heart dies, the Way is born.** Subtle, non-repeating micro-interactions that reward slow, attentive browsing. Nothing flashy.
 4. **Kanso (簡素) — Simplicity.** Strip away everything that doesn't serve the content. If in doubt, remove it.
 
 ---
@@ -25,7 +25,7 @@ This is a personal website centered on writing, ideas, and contemplation. The de
 ### Pages (9 total)
 
 | Page | Route | Purpose |
-|------|-------|---------|
+|------|-------|--------|
 | Home | `/` | Landing page — a single poetic statement or rotating quote, minimal navigation entry point |
 | Writing | `/writing` | Unified index — all posts across all projects, sorted by recency |
 | Language | `/language` | Project index for NLP & natural language processing writing |
@@ -224,7 +224,7 @@ Each project inherits all global tokens but overrides `--accent` and `--accent-h
 **Project accent overrides (applied via a data attribute, e.g., `data-project="stillness"` on `<body>`):**
 
 | Project | `--accent` | `--accent-hover` | Character |
-|---------|------------|------------------|-----------|
+|---------|------------|------------------|----------|
 | Language | `#6B7FA3` | `#4E6285` | Cool slate — intellectual, precise |
 | Stillness | `#7A9E87` | `#5C8069` | Soft sage — breath, morning, moss |
 | ApokalYi | `#A08B5B` | `#7D6C41` | Warm amber — old ink, candlelight |
@@ -290,7 +290,7 @@ Use a base-8 scale consistently:
 ### Footer
 
 - Nearly invisible. A single line at the bottom of each page.
-- Content: Just the year and your name, or a short phrase. Example: `© 2026` or `一期一会`
+- Content: Just the year and your name, or a short phrase. Example: `© 2026` or `应无所住`
 - Muted color (`--text-tertiary`), small type, generous top margin
 
 ---
@@ -345,7 +345,7 @@ Animations should be **felt, not seen**. They exist to create a sense of calm tr
 ### Stack
 
 | Layer | Technology | Rationale |
-|-------|------------|-----------|
+|-------|------------|----------|
 | Framework | **Astro** (static output) | Ships zero JS by default; purpose-built for content sites; perfect fit for performance targets |
 | Styling | **Vanilla CSS with custom properties** | Maps directly to the design token system; no build complexity; full control |
 | Content | **Markdown files** in a `/content/[project]/` directory | Write posts in `.md` with frontmatter (`title`, `date`, `excerpt`, `project`) — no CMS needed |
