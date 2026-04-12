@@ -1,6 +1,6 @@
 ---
 title: "LLM Evaluation (11/12) — Fairness, HELM's Seven Dimensions, and Multilingual Gaps"
-date: "2026-04-07"
+date: "2026-04-08"
 excerpt: "HELM's multi-dimensional framework, the ReDial dialect study on AAVE, and why multilingual ≠ multicultural."
 project: language
 readingTime: 6

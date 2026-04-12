@@ -1,6 +1,6 @@
 ---
 title: "LLM Evaluation (9/12) — Safety: Red-Teaming, Multi-Turn Attacks, Intent Laundering"
-date: "2026-04-07"
+date: "2026-04-10"
 excerpt: "81% of safety benchmarks test predefined risks with fixed prompts. Multi-turn attacks hit 75% failure rates. Intent laundering hits 90–98%."
 project: language
 readingTime: 6

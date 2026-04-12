@@ -1,6 +1,6 @@
 ---
 title: "FlashAttention Series (2/4) — Why Attention Is Memory-Bound: The N×N Problem"
-date: "2026-03-26"
+date: "2026-04-01"
 excerpt: "The attention score matrix is always N×N per head regardless of d_k, and naive attention writes it to HBM three times. Here's why."
 project: language
 readingTime: 5

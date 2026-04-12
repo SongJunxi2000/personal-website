@@ -1,6 +1,6 @@
 ---
 title: "LLM Evaluation (1/12) — Overview and the Benchmark Treadmill"
-date: "2026-04-07"
+date: "2026-04-18"
 excerpt: "Goodhart's Law, five phases of benchmark saturation, and why no single evaluation method has proven durably reliable."
 project: language
 readingTime: 6

@@ -1,6 +1,6 @@
 ---
 title: "Transformer Series (2/9) — BPE Tokenization"
-date: "2026-03-23"
+date: "2026-03-27"
 excerpt: "How raw text becomes integers — and why the merge rules matter as much as the vocabulary."
 project: language
 readingTime: 5

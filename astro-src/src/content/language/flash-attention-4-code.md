@@ -1,6 +1,6 @@
 ---
 title: "FlashAttention Series (4/4) — FlashAttention in Code"
-date: "2026-03-26"
+date: "2026-03-30"
 excerpt: "A minimal Python/PyTorch implementation of FlashAttention's online softmax and tiling algorithm, with comparison to naive attention."
 project: language
 readingTime: 6

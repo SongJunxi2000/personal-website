@@ -1,6 +1,6 @@
 ---
 title: "FlashAttention Series (3/4) — Tiling and Online Softmax Explained"
-date: "2026-03-26"
+date: "2026-03-31"
 excerpt: "A step-by-step walkthrough of how FlashAttention eliminates the N×N memory bottleneck using tiling and incremental softmax — with concrete numbers."
 project: language
 readingTime: 8

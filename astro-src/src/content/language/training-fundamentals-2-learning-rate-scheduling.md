@@ -1,6 +1,6 @@
 ---
 title: "Training Fundamentals (2/4) — Learning Rate Scheduling"
-date: "2026-03-27"
+date: "2026-04-05"
 excerpt: "Step decay, exponential decay, cosine annealing, and the warmup + cosine pattern that became the standard for transformer training."
 project: language
 readingTime: 6

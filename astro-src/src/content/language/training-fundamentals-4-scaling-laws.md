@@ -1,6 +1,6 @@
 ---
 title: "Training Fundamentals (4/4) — Scaling Laws: Kaplan, Chinchilla, and Beyond"
-date: "2026-03-29"
+date: "2026-04-03"
 excerpt: "How model performance relates to parameters, data, and compute — and why the industry shifted from 'make it bigger' to 'train it longer.'"
 project: language
 readingTime: 9

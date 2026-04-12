@@ -1,6 +1,6 @@
 ---
 title: "Transformer Series (9/9) — Output Head & Training Essentials"
-date: "2026-03-23"
+date: "2026-03-20"
 excerpt: "How a hidden state becomes a probability distribution, and what cross-entropy loss, teacher forcing, and learning rate warmup actually do."
 project: language
 readingTime: 8

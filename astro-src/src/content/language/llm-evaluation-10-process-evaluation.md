@@ -1,6 +1,6 @@
 ---
 title: "LLM Evaluation (10/12) — Process-Based Evaluation, PRMs, and Faithfulness"
-date: "2026-04-07"
+date: "2026-04-09"
 excerpt: "When reasoning matters as much as the final answer: process reward models, the faithfulness problem, and why labeling steps is fundamentally hard."
 project: language
 readingTime: 7

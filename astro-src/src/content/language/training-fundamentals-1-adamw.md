@@ -1,6 +1,6 @@
 ---
 title: "Training Fundamentals (1/4) — AdamW: Why Every LLM Uses It"
-date: "2026-03-27"
+date: "2026-04-06"
 excerpt: "From vanilla SGD to Adam to AdamW — how adaptive learning rates and decoupled weight decay became the default optimizer for transformer training."
 project: language
 readingTime: 7

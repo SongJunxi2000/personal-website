@@ -1,6 +1,6 @@
 ---
 title: "FlashAttention Series (1/4) — GPU Memory Hierarchy: HBM, SRAM, and Why It Matters"
-date: "2026-03-26"
+date: "2026-04-02"
 excerpt: "Understanding the two-level memory system in modern GPUs and why some operations are memory-bound while others are compute-bound."
 project: language
 readingTime: 4

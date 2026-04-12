@@ -1,6 +1,6 @@
 ---
 title: "LLM Evaluation (8/12) — The Null Model Attack on LLM-as-Judge"
-date: "2026-04-07"
+date: "2026-04-11"
 excerpt: "A model that outputs a single constant string — no reasoning, no task comprehension — achieved 86.5% win rate on AlpacaEval 2.0. How, and what it means."
 project: language
 readingTime: 4

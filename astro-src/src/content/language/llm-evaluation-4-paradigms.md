@@ -1,6 +1,6 @@
 ---
 title: "LLM Evaluation (4/12) — Paradigms: Fine-Tuning, Few-Shot, Logit vs. Generative"
-date: "2026-04-07"
+date: "2026-04-15"
 excerpt: "From BERT-on-SQuAD to GPT-3's few-shot prompting, and the subtle but crucial gap between logit-based and generative evaluation."
 project: language
 readingTime: 8

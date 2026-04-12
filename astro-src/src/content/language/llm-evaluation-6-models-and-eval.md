@@ -1,6 +1,6 @@
 ---
 title: "LLM Evaluation (6/12) — How Model Releases Broke Evaluation"
-date: "2026-04-07"
+date: "2026-04-13"
 excerpt: "GPT-3, Chinchilla, ChatGPT, GPT-4, LLaMA, o1, DeepSeek-R1 — each release exposed a specific evaluation failure and catalyzed new methods."
 project: language
 readingTime: 6

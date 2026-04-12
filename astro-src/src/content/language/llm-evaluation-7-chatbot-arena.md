@@ -1,6 +1,6 @@
 ---
 title: "LLM Evaluation (7/12) — Chatbot Arena: Mechanics, Economics, Controversies"
-date: "2026-04-07"
+date: "2026-04-12"
 excerpt: "How LMSYS's crowdsourced leaderboard works, where Elo comes from, and why the Llama 4 incident exposed a structural conflict."
 project: language
 readingTime: 5

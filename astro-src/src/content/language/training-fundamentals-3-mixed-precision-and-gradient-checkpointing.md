@@ -1,6 +1,6 @@
 ---
 title: "Training Fundamentals (3/4) — Mixed Precision Training & Gradient Checkpointing"
-date: "2026-03-28"
+date: "2026-04-04"
 excerpt: "Two essential memory optimization techniques: reducing the size of stored values (FP16/BF16) and reducing the number of stored values (checkpointing)."
 project: language
 readingTime: 8

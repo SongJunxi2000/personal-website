@@ -1,6 +1,6 @@
 ---
 title: "Transformer Series (1/9) — Token Embeddings & d_model"
-date: "2026-03-23"
+date: "2026-03-28"
 excerpt: "What is d_model, and how does a lookup table become the foundation of every LLM?"
 project: language
 readingTime: 4

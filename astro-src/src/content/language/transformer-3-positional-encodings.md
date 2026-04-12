@@ -1,6 +1,6 @@
 ---
 title: "Transformer Series (3/9) — Positional Encodings"
-date: "2026-03-23"
+date: "2026-03-26"
 excerpt: "Attention is permutation-invariant. Without a positional signal, 'dog bites man' and 'man bites dog' look identical."
 project: language
 readingTime: 6

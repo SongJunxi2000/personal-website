@@ -1,6 +1,6 @@
 ---
 title: "LLM Evaluation (3/12) — Methods Reference Table"
-date: "2026-04-07"
+date: "2026-04-16"
 excerpt: "Twelve evaluation paradigms, contamination detection methods, and diagnostic studies — each with strengths, weaknesses, and current status."
 project: language
 readingTime: 5

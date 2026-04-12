@@ -1,6 +1,6 @@
 ---
 title: "LLM Evaluation (5/12) — Contamination, Gaming, and the Evaluation Crisis"
-date: "2026-04-07"
+date: "2026-04-14"
 excerpt: "Three diagnostic studies — C-BOD, GSM1K, option-reordering — and the v1→v2 Open LLM Leaderboard collapse."
 project: language
 readingTime: 7
