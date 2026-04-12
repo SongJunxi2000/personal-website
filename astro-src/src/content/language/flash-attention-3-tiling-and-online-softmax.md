@@ -1,5 +1,5 @@
 ---
-title: "FlashAttention Series (3/4) — Tiling and Online Softmax Explained"
+title: "FlashAttention (3/4) — Tiling and Online Softmax Explained"
 date: "2026-03-31"
 excerpt: "A step-by-step walkthrough of how FlashAttention eliminates the N×N memory bottleneck using tiling and incremental softmax — with concrete numbers."
 project: language
@@ -69,7 +69,7 @@ You maintain a **running max** and **running sum**, correcting earlier results w
 **After K block 0** (say scores = [3, 1, 2, 4]):
 
 - Running max: m₀ = 4
-- Running sum: s₀ = exp(3−4) + exp(1−4) + exp(2−4) + exp(4−4) = 1.320
+- Running sum: s₀ = exp(3−4) + exp(1−4) + exp(2−4) + exp(4−4) = 1.553
 - Compute tentative weights, multiply by V block 0, store as partial output o₀
 - **Discard raw scores and weights**
 
@@ -82,7 +82,7 @@ m_new = max(4, 5) = 5
 
 Correction factor = exp(m_old − m_new) = exp(4 − 5) = 0.368
 
-s₀_corrected = 1.320 × 0.368 = 0.486
+s₀_corrected = 1.553 × 0.368 = 0.571
 o₀_corrected = o₀ × 0.368
 ```
 
@@ -149,25 +149,24 @@ q·k₃ = 1×0 + 0×0 + 2×1 + 1×0 = 2
 scores = [1, 2, 4, 2]
 ```
 
-**Partial softmax**:
+**Partial softmax** (unnormalized — we divide by the total sum only at the end):
 
 ```
 m₀ = max(1, 2, 4, 2) = 4
-s₀ = exp(−3) + exp(−2) + exp(0) + exp(−2)
-   = 0.050 + 0.135 + 1.000 + 0.135 = 1.320
-
-weights = [0.038, 0.102, 0.758, 0.102]
+exp_scores = [exp(−3), exp(−2), exp(0), exp(−2)]
+           = [0.050, 0.135, 1.000, 0.135]
+s₀ = 0.050 + 0.135 + 1.000 + 0.135 = 1.320
 ```
 
-**Multiply by V block 0** (in SRAM):
+**Multiply unnormalized exp_scores by V block 0** (in SRAM):
 
 ```
-o₀ = 0.038×[2,1,0,3] + 0.102×[1,0,1,2]
-   + 0.758×[0,2,1,1] + 0.102×[3,1,0,0]
-   = [0.485, 1.621, 0.860, 1.071]
+o₀ = 0.050×[2,1,0,3] + 0.135×[1,0,1,2]
+   + 1.000×[0,2,1,1] + 0.135×[3,1,0,0]
+   = [0.641, 2.185, 1.135, 1.420]
 ```
 
-**Discard** scores [1,2,4,2] and weights [0.038, 0.102, 0.758, 0.102]. They never touch HBM. Keep only: m₀=4, s₀=1.320, o₀=[0.485, 1.621, 0.860, 1.071].
+**Discard** scores and exp_scores. They never touch HBM. Keep only: m₀=4, s₀=1.320, o₀=[0.641, 2.185, 1.135, 1.420].
 
 ### Processing K block 1
 
@@ -185,28 +184,29 @@ m_new  = 5
 factor = exp(4 − 5) = 0.368
 
 s₀_corrected = 1.320 × 0.368 = 0.486
-o₀_corrected = [0.485, 1.621, 0.860, 1.071] × 0.368
-             = [0.178, 0.596, 0.316, 0.394]
+o₀_corrected = [0.641, 2.185, 1.135, 1.420] × 0.368
+             = [0.236, 0.804, 0.418, 0.523]
 ```
 
 **Add block 1's contribution**:
 
 ```
-s₁ = exp(5−5) + exp(1−5) + exp(3−5) + exp(1−5)
-   = 1.000 + 0.018 + 0.135 + 0.018 = 1.171
+exp_scores₁ = [exp(0), exp(−4), exp(−2), exp(−4)]
+            = [1.000, 0.018, 0.135, 0.018]
+s₁ = 1.000 + 0.018 + 0.135 + 0.018 = 1.171
 
 s_final = 0.486 + 1.171 = 1.657
 
-o₁ = (unnormalized weights) × V block 1
-   = [0.779, 1.823, 1.290, 0.115]
+o₁ = 1.000×[1,3,2,0] + 0.018×[0,1,0,2] + 0.135×[2,0,1,1] + 0.018×[1,0,0,3]
+   = [1.289, 3.018, 2.135, 0.227]
 ```
 
 **Final output**:
 
 ```
 output = (o₀_corrected + o₁) / s_final
-       = ([0.178, 0.596, 0.316, 0.394] + [0.779, 1.823, 1.290, 0.115]) / 1.657
-       = [0.578, 1.460, 0.970, 0.307]
+       = ([0.236, 0.804, 0.418, 0.523] + [1.289, 3.018, 2.135, 0.227]) / 1.657
+       = [0.920, 2.306, 1.540, 0.452]
 ```
 
 Written to HBM **once**. Identical to computing standard softmax on the full score vector [1,2,4,2,5,1,3,1] and multiplying by the full V matrix.

@@ -1,5 +1,5 @@
 ---
-title: "Transformer Series (6/9) — Multi-Head Attention & Causal Masking"
+title: "Transformer (6/9) — Multi-Head Attention & Causal Masking"
 date: "2026-03-23"
 excerpt: "One attention head can only look for one thing at a time. Multi-head attention lets different heads specialize — and causal masking keeps training honest."
 project: language

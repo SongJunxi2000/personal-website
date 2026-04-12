@@ -14,7 +14,7 @@ Two essential techniques for training large models efficiently. They attack the 
 
 **Q: How does floating point work?**
 
-Floating point is binary scientific notation. Just as decimal notation writes 5750 as 1.234 × 10³, floating point represents numbers as:
+Floating point is binary scientific notation. Just as decimal notation writes 5750 as 5.750 × 10³, floating point represents numbers as:
 
 ```
 (-1)^sign × 1.mantissa × 2^exponent

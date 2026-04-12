@@ -1,5 +1,5 @@
 ---
-title: "Transformer Series (4/9) — Scaled Dot-Product Attention"
+title: "Transformer (4/9) — Scaled Dot-Product Attention"
 date: "2026-03-25"
 excerpt: "The full attention formula, where Q, K, V come from, and why dot products measure relevance."
 project: language

@@ -1,5 +1,5 @@
 ---
-title: "Transformer Series (8/9) — Encoder vs Decoder Architecture"
+title: "Transformer (8/9) — Encoder vs Decoder Architecture"
 date: "2026-03-21"
 excerpt: "Why the industry converged on decoder-only — and what was lost when the encoder was left behind."
 project: language

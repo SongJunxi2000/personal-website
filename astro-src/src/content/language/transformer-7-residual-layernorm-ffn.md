@@ -1,5 +1,5 @@
 ---
-title: "Transformer Series (7/9) — Residual Connections, Layer Norm & FFN"
+title: "Transformer (7/9) — Residual Connections, Layer Norm & FFN"
 date: "2026-03-22"
 excerpt: "The three components that wrap every attention block — and why without them, deep networks couldn't be trained at all."
 project: language

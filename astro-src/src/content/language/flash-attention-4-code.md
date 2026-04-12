@@ -1,5 +1,5 @@
 ---
-title: "FlashAttention Series (4/4) — FlashAttention in Code"
+title: "FlashAttention (4/4) — FlashAttention in Code"
 date: "2026-03-30"
 excerpt: "A minimal Python/PyTorch implementation of FlashAttention's online softmax and tiling algorithm, with comparison to naive attention."
 project: language
@@ -34,10 +34,9 @@ def naive_attention(Q, K, V):
     # Step 3: Read weights from HBM, multiply by V → write output to HBM
     output = weights @ V
 
-    return output
-
     # The scores and weights tensors are both [batch, heads, N, N]
     # and each one gets written/read from HBM — that's the waste.
+    return output
 ```
 
 ---
@@ -145,7 +144,7 @@ print(f"Allclose: {torch.allclose(naive_out, flash_out, atol=1e-5)}")
 
 ## What the real implementation does differently
 
-The Python code above demonstrates the algorithm but runs entirely in PyTorch on standard GPU kernels — so it doesn't actually achieve the SRAM-level optimizations. A production FlashAttention implementation (like [Dao et al.'s](https://github.com/Dao-AILab/flash-attention)) differs in several ways:
+The Python code above demonstrates the algorithm but doesn't achieve the actual SRAM-level optimizations — it still runs on standard PyTorch GPU kernels. A production implementation (like [Dao et al.'s](https://github.com/Dao-AILab/flash-attention)) differs in several ways:
 
 **Written as a fused CUDA/Triton kernel.** The entire inner loop — score computation, online softmax, V multiply — runs as a single GPU kernel. No intermediate tensors are allocated in HBM between steps.
 
@@ -168,7 +167,7 @@ import torch.nn.functional as F
 output = F.scaled_dot_product_attention(Q, K, V)
 
 # Or force a specific backend:
-with torch.backends.cuda.sdp_kernel(
+with torch.nn.attention.sdpa_kernel(
     enable_flash=True,
     enable_math=False,
     enable_mem_efficient=False

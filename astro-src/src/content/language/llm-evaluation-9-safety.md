@@ -83,7 +83,7 @@ The malicious intent is fully preserved — all operational details remain — b
 - ASR jumps from 5.38% to **86.79%** on AdvBench when triggers are removed.
 - ASR jumps from 13.79% to **79.83%** on HarmBench.
 - With iterative refinement: **90–98%** success across all models.
-- All previously "reasonably safe" models become unsafe, including Gemini 3 Pro and Claude Sonnet 3.7.
+- All previously "reasonably safe" models become unsafe, including Gemini 3 Pro and Claude 3.7 Sonnet.
 
 The implication: the 81% of safety benchmarks using fixed prompts with obvious trigger words are testing keyword-level pattern matching, not genuine safety reasoning.
 

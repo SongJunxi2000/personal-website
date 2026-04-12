@@ -1,5 +1,5 @@
 ---
-title: "Transformer Series (0/9) — Complete Architecture Walkthrough with Code"
+title: "Transformer (0/9) — Complete Architecture Walkthrough with Code"
 date: "2026-03-29"
 excerpt: "The full decoder-only Transformer in working PyTorch — from BPE tokenization to text generation, with every piece explained."
 project: language

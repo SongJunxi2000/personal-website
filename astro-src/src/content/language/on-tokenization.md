@@ -74,5 +74,3 @@ The practical winner for most modern LLMs has been BPE — specifically byte-lev
 ---
 
 *Part 2 covers the actual BPE training pipeline — the merge loop, pre-tokenization, and the efficiency insight that makes it fast.*
-
-*Day 1 notes — CS336: Language Modeling from Scratch*

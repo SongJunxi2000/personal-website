@@ -20,7 +20,7 @@ const { Content, frontmatter } = mod;
   excerpt={frontmatter.excerpt}
   project="language"
   readingTime={frontmatter.readingTime}
-  autoTranslated={frontmatter.auto_translated}
+  autoTranslated={frontmatter.autoTranslated ?? frontmatter.auto_translated}
 >
   <Content />
 </PostLayout>

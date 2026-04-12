@@ -1,5 +1,5 @@
 ---
-title: "Transformer Series (5/9) — sqrt(d_k) Scaling & the @V Step"
+title: "Transformer (5/9) — sqrt(d_k) Scaling & the @V Step"
 date: "2026-03-24"
 excerpt: "Why dividing by sqrt(d_k) isn't arbitrary — and what it means for a token to 'attend' to another."
 project: language

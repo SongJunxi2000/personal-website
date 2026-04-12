@@ -108,5 +108,3 @@ With pre-token frequency counts, if the word `" the"` appears 5,000 times, you p
 The difference between a corpus with 1M tokens and one with 50K unique pre-tokens is a 20× speedup on each merge iteration. Over 40K merges, this is the difference between training in seconds and training for hours.
 
 ---
-
-*Day 1 notes — CS336: Language Modeling from Scratch*

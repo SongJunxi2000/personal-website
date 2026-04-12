@@ -47,10 +47,10 @@ optimizer = Adam(model.parameters(), lr=1e-3)
 loss_fn = MSELoss()
 
 for each batch of random x (shape: 100×10):
-    target = x.sum(dim=1)          # true y = sum(x)
-    pred = model(x)
-    loss = loss_fn(pred, target)
     optimizer.zero_grad()           # clear old gradients
+    target = x.sum(dim=1)          # true y = sum(x)
+    pred = model(x)                # forward pass
+    loss = loss_fn(pred, target)   # compute loss
     loss.backward()                 # compute new gradients
     optimizer.step()                # update weights
 ```
@@ -78,5 +78,3 @@ For example: if the word `" the"` appears 5,000 times, you process it once and m
 The same intuition applies to mini-batching in PyTorch: you never process the whole dataset in one shot, you work with compressed representations of it.
 
 ---
-
-*Day 1 notes — CS336: Language Modeling from Scratch*

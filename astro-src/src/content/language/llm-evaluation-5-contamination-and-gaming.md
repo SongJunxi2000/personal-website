@@ -24,7 +24,7 @@ A concrete example of real contamination: GSM8K problem says "Sally has 7 apples
 
 - GPT-3.5 and GPT-4 were exposed to roughly **4.7 million benchmark samples** during training.
 - The GPT-4 technical report acknowledged "portions of BIG-bench were inadvertently mixed into the training set."
-- OpenAI deliberately included part of the GSM-8K training set in pretraining data.
+- OpenAI deliberately included part of the GSM8K training set in pretraining data.
 - Because LLMs train on web-scraped corpora and most benchmarks are publicly available, overlap is near-inevitable.
 
 ---
