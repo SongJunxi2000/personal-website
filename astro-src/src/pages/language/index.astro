@@ -1,18 +1,61 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ProjectIndex from '../../components/ProjectIndex.astro';
 
 const modules = import.meta.glob('../../content/language/*.md', { eager: true });
 
-const posts = Object.entries(modules)
+const allPosts = Object.entries(modules)
   .map(([path, mod]: [string, any]) => ({
     slug: path.split('/').pop()?.replace('.md', '') ?? '',
     title: mod.frontmatter.title,
     date: mod.frontmatter.date,
     excerpt: mod.frontmatter.excerpt,
     url: `/language/${path.split('/').pop()?.replace('.md', '')}`,
-  }))
+  }));
+
+// Series groups in display order (conceptual progression)
+const SERIES_GROUPS: Array<{ label: string; prefixes?: string[]; slugs?: string[] }> = [
+  { label: 'Foundations', slugs: ['attention-is-all-you-need'] },
+  { label: 'Tokenization', prefixes: ['on-tokenization'], slugs: ['pytorch-basics-mlp'] },
+  { label: 'The Transformer', prefixes: ['transformer-'] },
+  { label: 'Efficient Attention', prefixes: ['flash-attention-'] },
+  { label: 'Training Fundamentals', prefixes: ['training-fundamentals-'] },
+  { label: 'Inference', prefixes: ['inference-optimization'] },
+  { label: 'Evaluation', prefixes: ['llm-evaluation-'] },
+  { label: 'Post-Training', prefixes: ['post-training-'] },
+];
+
+function matchesGroup(slug: string, group: typeof SERIES_GROUPS[0]): boolean {
+  if (group.slugs?.includes(slug)) return true;
+  if (group.prefixes?.some(p => slug.startsWith(p))) return true;
+  return false;
+}
+
+function extractSeriesNumber(slug: string): number {
+  const match = slug.match(/(\d+)/);
+  return match ? parseInt(match[1]) : 0;
+}
+
+const groups = SERIES_GROUPS.map(group => {
+  const posts = allPosts
+    .filter(post => matchesGroup(post.slug, group))
+    .sort((a, b) => {
+      const aIdx = group.slugs?.indexOf(a.slug) ?? -1;
+      const bIdx = group.slugs?.indexOf(b.slug) ?? -1;
+      if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+      if (aIdx === -1 && bIdx === -1) return extractSeriesNumber(a.slug) - extractSeriesNumber(b.slug);
+      return aIdx !== -1 ? 1 : -1;
+    });
+  return { label: group.label, posts };
+}).filter(g => g.posts.length > 0);
+
+// Catch any ungrouped posts
+const groupedSlugs = new Set(groups.flatMap(g => g.posts.map(p => p.slug)));
+const ungrouped = allPosts
+  .filter(p => !groupedSlugs.has(p.slug))
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+if (ungrouped.length > 0) {
+  groups.push({ label: 'Other', posts: ungrouped });
+}
 ---
 
 <BaseLayout
@@ -20,10 +63,145 @@ const posts = Object.entries(modules)
   description="Writing on natural language processing, linguistics, and the shape of meaning."
   project="language"
 >
-  <ProjectIndex
-    project="language"
-    title="Language"
-    intro="On natural language processing, the strangeness of how meaning is encoded in text, and what it might mean for a machine — or a person — to understand."
-    posts={posts}
-  />
+  <section class="project-index content">
+    <header class="project-header fade-in">
+      <h1 class="project-title">Language</h1>
+      <p class="project-intro">On natural language processing, the strangeness of how meaning is encoded in text, and what it might mean for a machine — or a person — to understand.</p>
+    </header>
+
+    {groups.map((group, gi) => (
+      <div class="series-group fade-in" style={`animation-delay: ${0.15 + gi * 0.08}s`}>
+        <div class="series-header">
+          <h2 class="series-label">{group.label}</h2>
+          <span class="series-count">{group.posts.length}</span>
+        </div>
+        <ul class="post-list" role="list">
+          {group.posts.map(post => (
+            <li class="post-item">
+              <a href={post.url} class="post-link">
+                <time class="post-date" datetime={post.date}>
+                  {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </time>
+                <h3 class="post-title">{post.title}</h3>
+                {post.excerpt && <p class="post-excerpt">{post.excerpt}</p>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
 </BaseLayout>
+
+<style>
+  .project-index {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+  }
+
+  .project-header {
+    margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .project-title {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 300;
+    margin-bottom: var(--space-lg);
+  }
+
+  .project-intro {
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 1.8vw, 1.15rem);
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    max-width: 560px;
+    margin: 0;
+  }
+
+  .series-group {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .series-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .series-label {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .series-count {
+    font-family: var(--font-ui);
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-link {
+    display: block;
+    padding: var(--space-xl) 0;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.3s ease;
+  }
+
+  .post-link:hover {
+    opacity: 0.7;
+  }
+
+  .post-link:hover .post-title {
+    transform: translateX(4px);
+  }
+
+  .post-date {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .post-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+    transition: transform 0.3s ease;
+  }
+
+  .post-excerpt {
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>
