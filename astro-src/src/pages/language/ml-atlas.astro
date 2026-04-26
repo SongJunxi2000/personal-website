@@ -1,0 +1,1095 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="ML Atlas"
+  description="An interactive field guide to ML models and their building blocks."
+  project="language"
+>
+  <section class="atlas container">
+    <nav class="atlas-breadcrumb fade-in">
+      <a href="/language">← Language</a>
+    </nav>
+
+    <header class="atlas-header fade-in" style="animation-delay: 0.1s">
+      <h1 class="atlas-title">ML Atlas</h1>
+      <p class="atlas-sub">Models × Modules — an interactive field guide to architectures and their building blocks.</p>
+    </header>
+
+    <div class="atlas-tabs fade-in" style="animation-delay: 0.2s" role="tablist" aria-label="Atlas views">
+      <button role="tab" class="tab active" data-view="models" aria-selected="true">Models</button>
+      <button role="tab" class="tab" data-view="modules" aria-selected="false">Modules</button>
+      <button role="tab" class="tab" data-view="graph" aria-selected="false">Graph</button>
+    </div>
+
+    <div class="atlas-content fade-in" style="animation-delay: 0.3s">
+
+      <!-- ─── Models View ─── -->
+      <section id="view-models" class="view active">
+        <p class="view-hint">Filter by era. Every module in an architecture is a colored pill — click it to jump to the Modules tab.</p>
+        <div class="catbar" id="model-catbar"></div>
+        <div id="model-list"></div>
+      </section>
+
+      <!-- ─── Modules View ─── -->
+      <section id="view-modules" class="view">
+        <p class="view-hint">Every module referenced in the Models tab, grouped by function and color-coded. Click any model pill to jump back.</p>
+        <div id="module-tree"></div>
+      </section>
+
+      <!-- ─── Graph View ─── -->
+      <section id="view-graph" class="view">
+        <p class="view-hint">A hierarchical map. Click any colored chip or legend entry to highlight every model that uses that module.</p>
+        <div class="graph-toolbar">
+          <span class="graph-hint">Click a chip to highlight. Click again or press Clear to reset.</span>
+          <span class="active-tag" id="active-tag"></span>
+          <button class="graph-clear" id="clear-hl">Clear</button>
+        </div>
+        <div class="graph-layout">
+          <div id="graph-tree-mount"></div>
+          <aside class="legend" id="legend-mount"></aside>
+        </div>
+      </section>
+
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── Page Layout ───────────────────────────────────────── */
+  .atlas {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+    max-width: var(--layout-width);
+  }
+
+  .atlas-breadcrumb {
+    margin-bottom: var(--space-lg);
+  }
+
+  .atlas-breadcrumb a {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.3s ease;
+  }
+
+  .atlas-breadcrumb a:hover {
+    color: var(--accent);
+  }
+
+  .atlas-header {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .atlas-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 300;
+    margin-bottom: var(--space-md);
+  }
+
+  .atlas-sub {
+    font-family: var(--font-serif);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 560px;
+    margin: 0;
+  }
+
+  /* ─── Tabs ──────────────────────────────────────────────── */
+  .atlas-tabs {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+  }
+
+  .tab {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab:hover {
+    border-color: var(--text-tertiary);
+    color: var(--text-primary);
+  }
+
+  .tab.active {
+    background: var(--text-primary);
+    color: var(--bg);
+    border-color: var(--text-primary);
+  }
+
+  /* ─── Views ─────────────────────────────────────────────── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  .view-hint {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-lg);
+    line-height: 1.6;
+  }
+
+  /* ─── Category Filter ───────────────────────────────────── */
+  .catbar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-lg);
+  }
+
+  :global(.cat-pill) {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  :global(.cat-pill:hover) {
+    border-color: var(--text-tertiary);
+    color: var(--text-primary);
+  }
+
+  :global(.cat-pill.active) {
+    background: var(--text-primary);
+    color: var(--bg);
+    border-color: var(--text-primary);
+  }
+
+  :global(.cat-pill .n) {
+    display: inline-block;
+    margin-left: 5px;
+    opacity: 0.5;
+    font-size: 0.65rem;
+  }
+
+  /* ─── Model Cards ───────────────────────────────────────── */
+  :global(.model-card) {
+    border: 1px solid var(--border);
+    padding: 24px 28px;
+    margin-bottom: 18px;
+    scroll-margin-top: 80px;
+    transition: border-color 0.3s ease;
+  }
+
+  :global(.model-card.flash) {
+    border-color: var(--accent);
+    animation: flashBorder 1.8s ease;
+  }
+
+  :global(.model-head) {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+  }
+
+  :global(.model-name) {
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  :global(.model-year) {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+  }
+
+  :global(.model-author) {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  :global(.model-cat-tag) {
+    margin-left: auto;
+    font-family: var(--font-ui);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  :global(.model-desc) {
+    color: var(--text-secondary);
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    margin: 0 0 6px;
+    max-width: 65ch;
+    line-height: 1.6;
+  }
+
+  :global(.model-why) {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    border-left: 2px solid var(--accent);
+    padding-left: 12px;
+    margin: 8px 0 16px;
+    max-width: 65ch;
+    line-height: 1.6;
+  }
+
+  :global(.arch-label) {
+    font-family: var(--font-ui);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 4px 0 6px;
+  }
+
+  :global(pre.arch) {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.75;
+    margin: 0;
+    padding: 14px 16px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    overflow-x: auto;
+    color: var(--text-primary);
+    white-space: pre;
+  }
+
+  /* ─── Module Pills (shared across views) ────────────────── */
+  :global(.mod-pill), :global(.chip) {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    padding: 1px 7px;
+    margin: 0 1px;
+    border-radius: 3px;
+    background: var(--c-soft);
+    color: var(--c-dark);
+    border: 1px solid var(--c-mid);
+    cursor: pointer;
+    transition: all 0.12s ease;
+    vertical-align: baseline;
+    text-decoration: none;
+  }
+
+  :global(.mod-pill:hover), :global(.chip:hover) {
+    background: var(--c-dark);
+    color: var(--bg);
+    border-color: var(--c-dark);
+  }
+
+  :global(.chip.pulse), :global(.mod-pill.pulse), :global(.legend-chip.pulse) {
+    background: var(--c-dark);
+    color: var(--bg);
+    border-color: var(--c-dark);
+    box-shadow: 0 0 0 2px var(--c-halo);
+  }
+
+  /* ─── Modules View ──────────────────────────────────────── */
+  :global(.module-cat-block) {
+    margin-bottom: var(--space-xl);
+  }
+
+  :global(.module-cat-head) {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  :global(.module-cat-num) {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+  }
+
+  :global(.module-cat-swatch) {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+    background: var(--c-dark);
+    border: 1px solid var(--c-mid);
+  }
+
+  :global(.module-cat-title) {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  :global(.module-cat-desc) {
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    font-style: italic;
+    max-width: 36ch;
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  :global(.module-grid) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+
+  :global(.module-card) {
+    border: 1px solid var(--border);
+    padding: 16px 18px 14px 22px;
+    scroll-margin-top: 80px;
+    transition: border-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  :global(.module-card::before) {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--c-dark);
+  }
+
+  :global(.module-card.flash) {
+    border-color: var(--c-dark);
+  }
+
+  :global(.module-card h3) {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.88rem;
+    margin: 0 0 3px;
+    color: var(--c-dark);
+  }
+
+  :global(.module-tag) {
+    font-family: var(--font-ui);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-dark);
+    font-weight: 600;
+    opacity: 0.75;
+  }
+
+  :global(.module-card p) {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 6px 0 8px;
+    line-height: 1.55;
+  }
+
+  :global(.module-card p.where) {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin: 4px 0;
+  }
+
+  :global(.module-card p.where strong) {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-family: var(--font-ui);
+  }
+
+  :global(.used-by-label) {
+    font-family: var(--font-ui);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 8px 0 4px;
+    font-weight: 600;
+  }
+
+  :global(.used-by-list) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  :global(.used-by-list .model-pill) {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: all 0.12s ease;
+  }
+
+  :global(.used-by-list .model-pill:hover) {
+    background: var(--text-primary);
+    color: var(--bg);
+    border-color: var(--text-primary);
+  }
+
+  :global(.used-by-list .none) {
+    font-style: italic;
+    color: var(--text-tertiary);
+    font-size: 0.72rem;
+  }
+
+  /* ─── Graph View ────────────────────────────────────────── */
+  .graph-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border);
+  }
+
+  .graph-hint {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    flex: 1;
+    min-width: 200px;
+  }
+
+  :global(.active-tag) {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+  }
+
+  :global(.active-tag strong) {
+    font-family: var(--font-mono);
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--c-soft);
+    color: var(--c-dark);
+    border: 1px solid var(--c-mid);
+  }
+
+  .graph-clear {
+    font-family: var(--font-ui);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .graph-clear:hover {
+    background: var(--text-primary);
+    color: var(--bg);
+    border-color: var(--text-primary);
+  }
+
+  .graph-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 28px;
+  }
+
+  /* Tree */
+  :global(.tree), :global(.tree ul) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  :global(.tree) {
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+  }
+
+  :global(.tree ul) {
+    padding-left: 0;
+    margin-left: 8px;
+  }
+
+  :global(.tree li) {
+    position: relative;
+    padding: 4px 0 4px 22px;
+    border-left: 1px dashed var(--border);
+    margin-left: 8px;
+  }
+
+  :global(.tree > li) {
+    border-left: none;
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  :global(.tree li:last-child) {
+    border-left-color: transparent;
+  }
+
+  :global(.tree li:last-child::after) {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 0;
+    height: 18px;
+    border-left: 1px dashed var(--border);
+  }
+
+  :global(.tree li::before) {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 18px;
+    width: 18px;
+    border-top: 1px dashed var(--border);
+  }
+
+  :global(.tree > li::before), :global(.tree > li::after) {
+    display: none;
+  }
+
+  :global(.node) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  :global(.node.root) {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 1.2rem;
+    background: var(--text-primary);
+    color: var(--bg);
+    padding: 6px 14px;
+    letter-spacing: -0.01em;
+  }
+
+  :global(.node.cat) {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+  }
+
+  :global(.node.subcat) {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px dashed var(--border);
+  }
+
+  :global(.node.model) {
+    display: block;
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    margin: 4px 0;
+    transition: border-color 0.2s ease;
+    max-width: 700px;
+  }
+
+  :global(.node.model.contains-hl) {
+    border-color: var(--c-dark, var(--accent));
+  }
+
+  :global(.node.model .model-title) {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  :global(.node.model .model-title .yr) {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-tertiary);
+    font-weight: 400;
+  }
+
+  :global(.node.model .chips) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  /* Legend */
+  .legend {
+    position: sticky;
+    top: 84px;
+    align-self: start;
+    border: 1px solid var(--border);
+    padding: 14px 14px 16px;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+  }
+
+  :global(.legend h3) {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  :global(.legend .legend-cat) {
+    margin-bottom: 10px;
+  }
+
+  :global(.legend .legend-cat-head) {
+    font-family: var(--font-ui);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  :global(.legend .legend-swatch) {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--c-dark);
+    display: inline-block;
+    border: 1px solid var(--c-mid);
+  }
+
+  :global(.legend .legend-items) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  :global(.legend-chip) {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 1px 5px;
+    border-radius: 3px;
+    cursor: pointer;
+    background: var(--c-soft);
+    color: var(--c-dark);
+    border: 1px solid var(--c-mid);
+    transition: all 0.12s ease;
+  }
+
+  :global(.legend-chip:hover) {
+    background: var(--c-dark);
+    color: var(--bg);
+    border-color: var(--c-dark);
+  }
+
+  /* ─── Animation ─────────────────────────────────────────── */
+  @keyframes flashBorder {
+    0%   { border-color: var(--accent); }
+    100% { border-color: var(--border); }
+  }
+
+  /* ─── Responsive ────────────────────────────────────────── */
+  @media (max-width: 960px) {
+    .graph-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .legend {
+      position: static;
+      max-height: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    :global(.model-card) {
+      padding: 18px 16px;
+    }
+
+    :global(.module-cat-desc) {
+      text-align: left;
+      margin-left: 0;
+    }
+
+    :global(.module-cat-head) {
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+<script>
+  import {
+    MODEL_CATEGORIES, MODULE_CATEGORIES, CAT_HUE, CAT_SAT,
+    MODULES, MODELS, GRAPH
+  } from '../../data/ml-atlas-data';
+  import type { Module, Model, GraphNode } from '../../data/ml-atlas-data';
+
+  /* ─── Color Assignment ─────────────────────────────────── */
+  interface ColoredModule extends Module {
+    hue: number;
+    color: string;
+    colorMid: string;
+    colorSoft: string;
+    colorHalo: string;
+  }
+
+  interface IndexedModel extends Model {
+    _modules: string[];
+  }
+
+  const coloredModules = MODULES as ColoredModule[];
+  const indexedModels = MODELS as IndexedModel[];
+
+  (function assignColors() {
+    const byCat: Record<string, ColoredModule[]> = {};
+    coloredModules.forEach(m => { (byCat[m.cat] ||= []).push(m); });
+    for (const cat in byCat) {
+      const arr = byCat[cat];
+      const baseHue = CAT_HUE[cat] ?? 0;
+      const sat = CAT_SAT[cat] ?? CAT_SAT.default;
+      const spread = 22;
+      const n = arr.length;
+      arr.forEach((m, i) => {
+        const t = n === 1 ? 0 : (i / (n - 1)) - 0.5;
+        const h = ((baseHue + t * spread) + 360) % 360;
+        m.hue = h;
+        m.color     = `hsl(${h}deg ${sat}% 40%)`;
+        m.colorMid  = `hsl(${h}deg ${sat}% 66%)`;
+        m.colorSoft = `hsl(${h}deg ${Math.min(75, sat + 10)}% 93%)`;
+        m.colorHalo = `hsla(${h}deg ${sat}% 50% / 0.25)`;
+      });
+    }
+  })();
+
+  function colorStyle(mod: ColoredModule): string {
+    return `--c-dark:${mod.color};--c-mid:${mod.colorMid};--c-soft:${mod.colorSoft};--c-halo:${mod.colorHalo}`;
+  }
+
+  /* ─── Index ────────────────────────────────────────────── */
+  const MODULE_BY_ID = Object.fromEntries(coloredModules.map(m => [m.id, m]));
+  const MODEL_BY_ID = Object.fromEntries(indexedModels.map(m => [m.id, m]));
+  const MODULE_TO_MODELS: Record<string, Set<string>> = {};
+  coloredModules.forEach(m => { MODULE_TO_MODELS[m.id] = new Set(); });
+  const MOD_RE = /\{([a-z0-9-]+)(?::[^}]+)?\}/g;
+  indexedModels.forEach(model => {
+    const found = new Set<string>(); let match;
+    MOD_RE.lastIndex = 0;
+    while ((match = MOD_RE.exec(model.arch)) !== null) found.add(match[1]);
+    model._modules = [...found];
+    found.forEach(id => { (MODULE_TO_MODELS[id] ||= new Set()).add(model.id); });
+  });
+
+  /* ─── Render Helpers ───────────────────────────────────── */
+  function esc(s: string): string {
+    return s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c] || c));
+  }
+
+  function renderArch(arch: string): string {
+    let html = esc(arch);
+    html = html.replace(/\{([a-z0-9-]+)(?::([^}]+))?\}/g, (_, id, label) => {
+      const mod = MODULE_BY_ID[id] as ColoredModule | undefined;
+      if (!mod) return `<span style="color:var(--accent)">[?${id}]</span>`;
+      const display = label || mod.name.replace(/^nn\./, '');
+      return `<span class="mod-pill" data-mod="${id}" style="${colorStyle(mod)}" `
+           + `title="${esc(mod.name)} — ${esc(mod.desc)}">${esc(display)}</span>`;
+    });
+    return html;
+  }
+
+  /* ─── Render: Models ───────────────────────────────────── */
+  function renderModels() {
+    const catbar = document.getElementById('model-catbar')!;
+    const counts: Record<string, number> = {};
+    MODEL_CATEGORIES.forEach(c => counts[c.id] = 0);
+    indexedModels.forEach(m => counts[m.cat] = (counts[m.cat] || 0) + 1);
+    catbar.innerHTML =
+      `<button class="cat-pill active" data-cat="all">All<span class="n">${indexedModels.length}</span></button>` +
+      MODEL_CATEGORIES.map(c =>
+        `<button class="cat-pill" data-cat="${c.id}">${c.label}<span class="n">${counts[c.id] || 0}</span></button>`
+      ).join('');
+
+    document.getElementById('model-list')!.innerHTML = indexedModels.map(m => {
+      const catLabel = MODEL_CATEGORIES.find(c => c.id === m.cat)?.label || m.cat;
+      return `
+      <article class="model-card" id="model-${m.id}" data-cat="${m.cat}">
+        <div class="model-head">
+          <h2 class="model-name">${esc(m.name)}</h2>
+          <span class="model-year">${esc(m.year)}</span>
+          <span class="model-author">${esc(m.author)}</span>
+          <span class="model-cat-tag">${esc(catLabel)}</span>
+        </div>
+        <p class="model-desc">${esc(m.desc)}</p>
+        <p class="model-why">Why it matters: ${esc(m.why)}</p>
+        <div class="arch-label">Architecture</div>
+        <pre class="arch">${renderArch(m.arch)}</pre>
+      </article>`;
+    }).join('');
+  }
+
+  /* ─── Render: Modules ──────────────────────────────────── */
+  function renderModules() {
+    document.getElementById('module-tree')!.innerHTML = MODULE_CATEGORIES.map((cat, i) => {
+      const mods = coloredModules.filter(m => m.cat === cat.id);
+      if (!mods.length) return '';
+      const catHeadStyle = colorStyle(mods[0]);
+      return `
+      <section class="module-cat-block" id="modcat-${cat.id}">
+        <div class="module-cat-head" style="${catHeadStyle}">
+          <span class="module-cat-num">${String(i + 1).padStart(2, '0')}</span>
+          <span class="module-cat-swatch"></span>
+          <h2 class="module-cat-title">${esc(cat.label)}</h2>
+          <span class="module-cat-desc">${esc(cat.desc)}</span>
+        </div>
+        <div class="module-grid">
+          ${mods.map(m => {
+            const users = [...(MODULE_TO_MODELS[m.id] || [])];
+            const pills = users.length
+              ? users.map(uid => {
+                  const md = MODEL_BY_ID[uid];
+                  return `<span class="model-pill" data-model="${uid}">${esc(md ? md.name : uid)}</span>`;
+                }).join('')
+              : `<span class="none">not referenced in any listed architecture</span>`;
+            return `
+            <article class="module-card" id="mod-${m.id}" style="${colorStyle(m)}">
+              <span class="module-tag">${esc(cat.label)}</span>
+              <h3>${esc(m.name)}</h3>
+              <p>${esc(m.desc)}</p>
+              <p class="where"><strong>Where:</strong> ${esc(m.where)}</p>
+              <p class="where"><strong>Why:</strong> ${esc(m.why)}</p>
+              <div class="used-by-label">Used by</div>
+              <div class="used-by-list">${pills}</div>
+            </article>`;
+          }).join('')}
+        </div>
+      </section>`;
+    }).join('');
+  }
+
+  /* ─── Render: Graph ────────────────────────────────────── */
+  function renderChip(modId: string): string {
+    const m = MODULE_BY_ID[modId] as ColoredModule | undefined;
+    if (!m) return '';
+    const display = m.name.replace(/^nn\./, '');
+    return `<span class="chip" data-mod="${modId}" style="${colorStyle(m)}" `
+         + `title="${esc(m.name)} — ${esc(m.desc)}">${esc(display)}</span>`;
+  }
+
+  function renderModelLeaf(id: string): string {
+    const model = MODEL_BY_ID[id] as IndexedModel | undefined;
+    if (!model) return '';
+    const chips = (model._modules || []).map(renderChip).join('');
+    return `<li>
+      <div class="node model" data-model="${id}">
+        <div class="model-title">${esc(model.name)} <span class="yr">${esc(model.year)}</span></div>
+        <div class="chips">${chips}</div>
+      </div>
+    </li>`;
+  }
+
+  function renderSubcat(sc: GraphNode): string {
+    return `<li><span class="node subcat">${esc(sc.label)}</span>
+      <ul>${(sc.modelIds || []).map(renderModelLeaf).join('')}</ul></li>`;
+  }
+
+  function renderGraph() {
+    const rootChildren = (GRAPH.children || []).map(ch => {
+      if (ch.children) {
+        return `<li><span class="node cat">${esc(ch.label)}</span>
+          <ul>${ch.children.map(renderSubcat).join('')}</ul></li>`;
+      } else {
+        return `<li><span class="node cat">${esc(ch.label)}</span>
+          <ul>${(ch.modelIds || []).map(renderModelLeaf).join('')}</ul></li>`;
+      }
+    }).join('');
+
+    document.getElementById('graph-tree-mount')!.innerHTML = `
+      <ul class="tree">
+        <li>
+          <span class="node root">${esc(GRAPH.label)}</span>
+          <ul>${rootChildren}</ul>
+        </li>
+      </ul>`;
+
+    document.getElementById('legend-mount')!.innerHTML = `
+      <h3>Legend</h3>
+      ${MODULE_CATEGORIES.map(cat => {
+        const mods = coloredModules.filter(m => m.cat === cat.id);
+        if (!mods.length) return '';
+        const swatchStyle = colorStyle(mods[0]);
+        return `<div class="legend-cat">
+          <div class="legend-cat-head" style="${swatchStyle}">
+            <span class="legend-swatch"></span>${esc(cat.label)}
+          </div>
+          <div class="legend-items">
+            ${mods.map(m => `<span class="legend-chip" data-mod="${m.id}" style="${colorStyle(m)}" title="${esc(m.desc)}">${esc(m.name.replace(/^nn\./, ''))}</span>`).join('')}
+          </div>
+        </div>`;
+      }).join('')}`;
+  }
+
+  /* ─── Interaction ──────────────────────────────────────── */
+  let currentHighlight: string | null = null;
+
+  function switchView(name: string) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + name)?.classList.add('active');
+    document.querySelectorAll('.tab').forEach(b => {
+      const isActive = (b as HTMLElement).dataset.view === name;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-selected', String(isActive));
+    });
+  }
+
+  function flashAndScroll(el: HTMLElement | null) {
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.classList.remove('flash');
+    void el.offsetWidth;
+    el.classList.add('flash');
+    setTimeout(() => el.classList.remove('flash'), 1900);
+  }
+
+  function goToModule(id: string) {
+    switchView('modules');
+    setTimeout(() => flashAndScroll(document.getElementById('mod-' + id)), 40);
+  }
+
+  function goToModel(id: string) {
+    switchView('models');
+    document.querySelectorAll('#model-catbar .cat-pill').forEach(b => {
+      b.classList.toggle('active', (b as HTMLElement).dataset.cat === 'all');
+    });
+    document.querySelectorAll('#model-list .model-card').forEach(c => {
+      (c as HTMLElement).style.display = '';
+    });
+    setTimeout(() => flashAndScroll(document.getElementById('model-' + id)), 40);
+  }
+
+  function filterModels(catId: string) {
+    document.querySelectorAll('#model-list .model-card').forEach(c => {
+      (c as HTMLElement).style.display =
+        (catId === 'all' || (c as HTMLElement).dataset.cat === catId) ? '' : 'none';
+    });
+    document.querySelectorAll('#model-catbar .cat-pill').forEach(b => {
+      b.classList.toggle('active', (b as HTMLElement).dataset.cat === catId);
+    });
+  }
+
+  function highlightModule(id: string) {
+    if (currentHighlight === id) { clearHighlight(); return; }
+    clearHighlight();
+    currentHighlight = id;
+    const mod = MODULE_BY_ID[id] as ColoredModule | undefined;
+    if (!mod) return;
+
+    document.querySelectorAll(`#view-graph .chip[data-mod="${id}"]`).forEach(c => {
+      c.classList.add('pulse');
+      const modelNode = c.closest('.node.model') as HTMLElement | null;
+      if (modelNode) {
+        modelNode.classList.add('contains-hl');
+        modelNode.style.setProperty('--c-dark', mod.color);
+        modelNode.style.setProperty('--c-halo', mod.colorHalo);
+      }
+    });
+    document.querySelectorAll(`.legend-chip[data-mod="${id}"]`).forEach(c => c.classList.add('pulse'));
+
+    const tag = document.getElementById('active-tag')!;
+    const count = MODULE_TO_MODELS[id]?.size || 0;
+    tag.innerHTML = `Highlighting <strong style="${colorStyle(mod)}">${esc(mod.name)}</strong> — ${count} model${count === 1 ? '' : 's'}`;
+
+    const first = document.querySelector(`#view-graph .chip[data-mod="${id}"]`);
+    if (first) first.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  function clearHighlight() {
+    currentHighlight = null;
+    document.querySelectorAll('.chip.pulse, .legend-chip.pulse, .mod-pill.pulse').forEach(c => c.classList.remove('pulse'));
+    document.querySelectorAll('.node.model.contains-hl').forEach(n => {
+      n.classList.remove('contains-hl');
+      (n as HTMLElement).style.removeProperty('--c-dark');
+      (n as HTMLElement).style.removeProperty('--c-halo');
+    });
+    document.getElementById('active-tag')!.innerHTML = '';
+  }
+
+  /* ─── Bind Events ──────────────────────────────────────── */
+  document.querySelectorAll('.tab').forEach(b => {
+    b.addEventListener('click', () => switchView((b as HTMLElement).dataset.view!));
+  });
+
+  document.getElementById('model-catbar')!.addEventListener('click', e => {
+    const b = (e.target as HTMLElement).closest('.cat-pill') as HTMLElement | null;
+    if (b) filterModels(b.dataset.cat!);
+  });
+
+  document.getElementById('model-list')!.addEventListener('click', e => {
+    const p = (e.target as HTMLElement).closest('.mod-pill') as HTMLElement | null;
+    if (p) goToModule(p.dataset.mod!);
+  });
+
+  document.getElementById('module-tree')!.addEventListener('click', e => {
+    const p = (e.target as HTMLElement).closest('.model-pill') as HTMLElement | null;
+    if (p) goToModel(p.dataset.model!);
+  });
+
+  document.getElementById('view-graph')!.addEventListener('click', e => {
+    const chip = (e.target as HTMLElement).closest('.chip, .legend-chip') as HTMLElement | null;
+    if (chip) highlightModule(chip.dataset.mod!);
+  });
+
+  document.getElementById('clear-hl')!.addEventListener('click', clearHighlight);
+
+  /* ─── Init ─────────────────────────────────────────────── */
+  renderModels();
+  renderModules();
+  renderGraph();
+</script>
