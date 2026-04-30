@@ -1,7 +1,7 @@
 ---
 title: "On Sitting"
 date: "2026-03-25"
-excerpt: "我第一次打坐，一直在睁眼。后来才明白，这其实就是整件事的起点。"
+excerpt: "冥想到底是什么"
 project: stillness
 readingTime: 5
 ---

@@ -2,7 +2,7 @@
 title: "Technique and the Way"
 title_zh: "术与道"
 date: "2026-04-11"
-excerpt: "你有术，没有道。这六个字我想了很久。"
+excerpt: "生生还是无生"
 project: stillness
 readingTime: 5
 ---

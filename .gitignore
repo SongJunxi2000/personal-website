@@ -16,8 +16,8 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Claude Code local settings
-.claude/settings.local.json
+# Claude Code
+.claude/
 
 # Env files
 .env
