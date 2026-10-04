@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import graph from '../../data/psychoanalysis-graph.html?raw';
+import comparison from '../../data/psychoanalysis-comparison.html?raw';
+import schools from '../../data/psychoanalysis-schools.html?raw';
+---
+<BaseLayout title="精神分析流派及其主要理论与技术" description="六个精神分析流派的传承关系、核心理论、代表人物与临床技术。" project="stillness">
+  <article class="psy-atlas container" lang="zh-CN">
+    <nav class="atlas-breadcrumb"><a href="/stillness">← Stillness</a></nav>
+    <header class="atlas-header">
+      <p class="eyebrow">Study notes · Psychoanalysis</p>
+      <h1>精神分析流派及其<br class="desktop-break" />主要理论与技术</h1>
+      <p class="atlas-sub">六个流派的来龙去脉、代表人物和临床技术。先看关系图，再按流派逐个复习。</p>
+    </header>
+    <nav class="jump" aria-label="流派快速跳转">
+  <ul>
+    <li><a class="c-classic" href="#classic">经典精神分析</a></li>
+    <li><a class="c-ego" href="#ego">自我心理学</a></li>
+    <li><a class="c-object" href="#object">客体关系</a></li>
+    <li><a class="c-interp" href="#interp">人际间</a></li>
+    <li><a class="c-self" href="#self">自体心理学</a></li>
+    <li><a class="c-rel" href="#rel">关系/主体间</a></li>
+  </ul>
+</nav>
+    <Fragment set:html={graph} />
+    <Fragment set:html={comparison} />
+    <Fragment set:html={schools} />
+    <p class="source-note">课程来源：孙平在简单心理讲授的课程。本笔记基于课程内容生成整理；各流派的引号昵称和关系图来自课堂，发展脉络、人物和技术为课后补充，复习时请以老师的讲授为准。</p>
+  </article>
+</BaseLayout>
+
+
+<style is:global>
+  .psy-atlas {
+    --c-classic: #a56473; --c-ego: #6b7fa3; --c-object: #628470;
+    --c-interp: #997b4c; --c-self: #907b9e; --c-rel: #a16f59;
+    --ink: var(--text-primary); --ink-soft: var(--text-secondary);
+    --surface: var(--bg-subtle); --paper: var(--bg); --rule: var(--border); --arrow: var(--text-tertiary);
+    padding-top: var(--space-xl); padding-bottom: var(--space-2xl);
+    font-family: var(--font-ui), 'PingFang SC', sans-serif; font-size: 14px; line-height: 1.85;
+  }
+  .psy-atlas .atlas-breadcrumb { margin-bottom: var(--space-lg); font-size: .8rem; }
+  .psy-atlas .atlas-breadcrumb a { color: var(--text-secondary); }
+  .psy-atlas .atlas-header { margin-bottom: var(--space-xl); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border); }
+  .psy-atlas .eyebrow { font-size: .68rem; text-transform: uppercase; letter-spacing: .16em; color: var(--accent); margin-bottom: 20px; }
+  .psy-atlas h1, .psy-atlas h2, .psy-atlas h3 { font-family: var(--font-serif), 'Songti SC', 'STSong', serif; font-weight: 400; }
+  .psy-atlas h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.45; letter-spacing: .04em; margin-bottom: 20px; }
+  .psy-atlas .atlas-sub { color: var(--text-secondary); max-width: 550px; margin: 0; line-height: 1.9; }
+  .psy-atlas .jump { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--border); margin-bottom: 28px; }
+  .psy-atlas .jump ul { display: flex; gap: 8px; overflow-x: auto; list-style: none; padding: 12px 0; margin: 0; }
+  .psy-atlas .jump a { display: block; white-space: nowrap; padding: 5px 10px; border: 1px solid var(--border); color: var(--c); font-size: .75rem; }
+  .psy-atlas .jump a:hover { border-color: var(--c); }
+  .psy-atlas :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .psy-atlas .map-scroll, .psy-atlas .table-scroll { overflow-x: auto; }
+  .psy-atlas .map { width: 100%; min-width: 660px; display: block; }
+  .psy-atlas .map .edge { stroke: var(--arrow); stroke-width: 1.3; fill: none; }
+  .psy-atlas .map .head { fill: var(--arrow); }
+  .psy-atlas .map .node rect { fill: var(--bg); stroke: var(--c); stroke-width: 1; rx: 0; }
+  .psy-atlas .map .node:hover rect, .psy-atlas .map .node:focus rect { fill: var(--bg-subtle); stroke-width: 2; }
+  .psy-atlas .map .name { font-family: 'Songti SC', 'STSong', serif; font-size: 23px; fill: var(--text-primary); text-anchor: middle; }
+  .psy-atlas .map .nick { font-size: 13px; fill: var(--text-secondary); text-anchor: middle; }
+  .psy-atlas .map-hint { font-size: .75rem; color: var(--text-secondary); margin: 24px 0; }
+  .psy-atlas h2.block { font-size: 1.4rem; margin: 52px 0 24px; }
+  .psy-atlas .compare { border-collapse: collapse; width: 100%; min-width: 800px; font-size: .8rem; }
+  .psy-atlas .compare th, .psy-atlas .compare td { text-align: left; vertical-align: top; padding: 18px 14px; border-bottom: 1px solid var(--border); }
+  .psy-atlas .compare thead th { font-weight: 500; color: var(--text-secondary); background: var(--bg-subtle); }
+  .psy-atlas .compare tbody th { color: var(--c); min-width: 130px; font-weight: 500; }
+  .psy-atlas .school { border-top: 1px solid var(--c); padding: 32px 0; margin: 32px 0 0; scroll-margin-top: 90px; }
+  .psy-atlas .school h2 { font-size: 1.8rem; color: var(--c); line-height: 1.4; }
+  .psy-atlas .school .nick { margin: 12px 0 0; }
+  .psy-atlas .school .nick small { color: var(--text-secondary); margin-left: 8px; font-size: .7rem; }
+  .psy-atlas .meta { color: var(--text-secondary); font-size: .75rem; margin: 12px 0; }
+  .psy-atlas .meta a { color: var(--c); text-decoration: underline; text-underline-offset: 4px; }
+  .psy-atlas .gist { max-width: 760px; margin: 20px 0 0; }
+  .psy-atlas .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .psy-atlas h3 { font-size: 1.15rem; margin: 28px 0 16px; }
+  .psy-atlas .timeline { list-style: none; padding: 0; }
+  .psy-atlas .timeline li { display: grid; grid-template-columns: 6em 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .psy-atlas time { color: var(--c); font-size: .75rem; font-variant-numeric: tabular-nums; }
+  .psy-atlas .people div { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .psy-atlas .people dt { font-weight: 500; }
+  .psy-atlas .people dt span { font-size: .75rem; color: var(--text-secondary); margin-left: 8px; }
+  .psy-atlas .people dd { color: var(--text-secondary); margin: 4px 0 0; font-size: .8rem; }
+  .psy-atlas .ideas { padding-left: 20px; }
+  .psy-atlas .ideas li { margin-bottom: 10px; }
+  .psy-atlas .note { background: var(--bg-subtle); padding: 16px; margin: 14px 0; font-size: .8rem; }
+  .psy-atlas .note p { margin-bottom: 12px; }
+  .psy-atlas .tech { margin-top: 24px; padding-top: 4px; border-top: 1px solid var(--border); }
+  .psy-atlas .tech h3 { color: var(--c); }
+  .psy-atlas .tech ul { list-style: none; padding: 0; }
+  .psy-atlas .tech li { padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .psy-atlas .tech b { display: block; font-weight: 500; }
+  .psy-atlas .tech span { color: var(--text-secondary); font-size: .8rem; }
+  .psy-atlas .source-note { border-top: 1px solid var(--border); padding-top: 24px; margin-top: 64px; color: var(--text-secondary); font-size: .75rem; }
+  .psy-atlas .c-classic { --c: var(--c-classic); } .psy-atlas .c-ego { --c: var(--c-ego); }
+  .psy-atlas .c-object { --c: var(--c-object); } .psy-atlas .c-interp { --c: var(--c-interp); }
+  .psy-atlas .c-self { --c: var(--c-self); } .psy-atlas .c-rel { --c: var(--c-rel); }
+  @media (prefers-color-scheme: dark) { .psy-atlas { --c-classic: #d499a6; --c-ego: #9eafd0; --c-object: #9abba6; --c-interp: #c9af85; --c-self: #b7a4c6; --c-rel: #d2a28c; } }
+  @media (max-width: 700px) {
+    .psy-atlas .cols { grid-template-columns: 1fr; gap: 0; }
+    .psy-atlas { padding-top: 32px; }
+    .psy-atlas .atlas-header { margin-bottom: 32px; }
+    .psy-atlas .desktop-break { display: none; }
+  }
+</style>

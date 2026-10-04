@@ -25,5 +25,22 @@ const posts = Object.entries(modules)
     title="Stillness"
     intro="On Buddhism, meditation, the I-Ching, and the practice of paying attention. Unhurried notes on sitting still, reading change, and finding a way through uncertainty."
     posts={posts}
-  />
+  >
+    <aside class="reference-note">
+      <span>Reference</span>
+      <a href="/stillness/psychoanalysis-atlas">
+        <h2>精神分析流派及其主要理论与技术</h2>
+        <p>六个流派的传承关系、核心观点与临床技术——关系图、对照表与复习笔记。</p>
+      </a>
+    </aside>
+  </ProjectIndex>
 </BaseLayout>
+
+<style>
+.reference-note { margin-bottom: var(--space-xl); }
+.reference-note > span { display: block; font-family: var(--font-ui); font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-secondary); padding-bottom: var(--space-sm); border-bottom: 1px solid var(--border); }
+.reference-note a { display: block; padding: var(--space-lg) 0; border-bottom: 1px solid var(--border); }
+.reference-note h2 { font-family: var(--font-serif), 'Songti SC', 'STSong', serif; font-size: 1.4rem; line-height: 1.6; margin-bottom: 12px; }
+.reference-note p { font-family: var(--font-ui); font-size: .85rem; color: var(--text-secondary); margin: 0; }
+.reference-note a:hover h2 { color: var(--accent); }
+</style>

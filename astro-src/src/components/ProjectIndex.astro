@@ -23,6 +23,8 @@ const { project, title, intro, posts } = Astro.props;
     <p class="project-intro">{intro}</p>
   </header>
 
+  <slot />
+
   <ul class="post-list" role="list">
     {posts.map((post, i) => (
       <li class="post-item fade-in" style={`animation-delay: ${0.2 + i * 0.08}s`}>
