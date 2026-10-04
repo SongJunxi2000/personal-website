@@ -2,7 +2,7 @@
 import PostLayout from '../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
-  const modules = import.meta.glob('../../content/apokalyi/*.md', { eager: true });
+  const modules = import.meta.glob('../../content/startup/*.md', { eager: true });
   return Object.entries(modules).map(([path, mod]: [string, any]) => ({
     params: { slug: path.split('/').pop()?.replace('.md', '') },
     props: { mod },
@@ -18,8 +18,9 @@ const { Content, frontmatter } = mod;
   title_zh={frontmatter.title_zh}
   date={frontmatter.date}
   excerpt={frontmatter.excerpt}
-  project="apokalyi"
+  project="startup"
   readingTime={frontmatter.readingTime}
+  englishOnly={frontmatter.language === 'en'}
   autoTranslated={frontmatter.autoTranslated ?? frontmatter.auto_translated}
 >
   <Content />

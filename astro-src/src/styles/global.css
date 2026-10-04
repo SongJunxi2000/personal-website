@@ -47,10 +47,10 @@
   --reading-progress: #9ABBA6;
 }
 
-[data-project="apokalyi"] {
-  --accent:       #A08B5B;
-  --accent-hover: #7D6C41;
-  --reading-progress: #BEA87A;
+[data-project="startup"] {
+  --accent:       #B05B6F;
+  --accent-hover: #8D4053;
+  --reading-progress: #C98394;
 }
 
 /* ─── Dark Mode ─────────────────────────────────────────────── */
@@ -77,9 +77,9 @@
     --accent-hover: #B8D4C3;
   }
 
-  [data-project="apokalyi"] {
-    --accent:       #C4A96E;
-    --accent-hover: #D9C08F;
+  [data-project="startup"] {
+    --accent:       #D99AAA;
+    --accent-hover: #E8BCC7;
   }
 }
 

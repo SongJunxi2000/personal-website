@@ -4,11 +4,12 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
-  project?: 'language' | 'stillness' | 'apokalyi';
+  project?: 'startup' | 'language' | 'stillness';
   isPost?: boolean;
+  englishOnly?: boolean;
 }
 
-const { title, description = 'A personal writing site.', project, isPost = false } = Astro.props;
+const { title, description = 'A personal writing site.', project, isPost = false, englishOnly = false } = Astro.props;
 const siteTitle = 'GUA';
 ---
 
@@ -29,8 +30,8 @@ const siteTitle = 'GUA';
       </>
     )}
     <!-- Apply saved language preference before paint to avoid flash -->
-    <script is:inline>
-      const saved = localStorage.getItem('lang') || 'en';
+    <script is:inline define:vars={{ englishOnly }}>
+      const saved = englishOnly ? 'en' : localStorage.getItem('lang') || 'en';
       document.documentElement.setAttribute('data-lang', saved);
     </script>
   </head>
@@ -39,13 +40,12 @@ const siteTitle = 'GUA';
       <nav class="container" aria-label="Main navigation">
         <a href="/" class="nav-home" aria-label="Home">○</a>
         <div class="nav-links">
+          <a href="/startup" class="nav-link link-animated" data-project-nav="startup">Startup</a>
           <a href="/language" class="nav-link link-animated" data-project-nav="language">Language</a>
           <a href="/stillness" class="nav-link link-animated" data-project-nav="stillness">Stillness</a>
-          <a href="/apokalyi" class="nav-link link-animated" data-project-nav="apokalyi">ApokalYi</a>
-          <a href="/about" class="nav-link link-animated">About</a>
           <a href="/connect" class="nav-link link-animated">Connect</a>
         </div>
-        <button class="lang-toggle" id="lang-toggle" aria-label="Switch language" style={isPost ? '' : 'display:none'}>
+        <button class="lang-toggle" id="lang-toggle" aria-label="Switch language" style={isPost && !englishOnly ? '' : 'display:none'}>
           <span class="lang-option" data-for="en">EN</span>
           <span class="lang-sep">/</span>
           <span class="lang-option" data-for="zh">中</span>

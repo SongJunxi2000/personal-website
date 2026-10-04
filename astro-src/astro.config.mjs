@@ -3,6 +3,10 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   output: 'static',
+  redirects: {
+    '/apokalyi': '/stillness',
+    '/apokalyi/[slug]': '/stillness/[slug]',
+  },
   markdown: {
     shikiConfig: {
       themes: {

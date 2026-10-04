@@ -2,7 +2,7 @@
 title: "Hexagram One: The Creative"
 date: "2026-01-10"
 excerpt: "Six unbroken lines. Pure yang. The beginning of all beginnings."
-project: apokalyi
+project: stillness
 readingTime: 5
 ---
 

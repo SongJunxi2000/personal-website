@@ -3,7 +3,7 @@ title: "The Difficult Hexagrams"
 title_zh: "水山蹇"
 date: "2026-04-30"
 excerpt: "坎外艮内，谁痛苦谁改变"
-project: apokalyi
+project: stillness
 readingTime: 3
 ---
 

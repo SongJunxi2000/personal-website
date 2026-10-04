@@ -2,7 +2,7 @@
 title: "What Divination Is Actually For"
 date: "2026-02-14"
 excerpt: "It is not about prediction. It is about attention."
-project: apokalyi
+project: stillness
 readingTime: 4
 ---
 

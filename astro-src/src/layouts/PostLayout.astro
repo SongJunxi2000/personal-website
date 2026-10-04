@@ -6,23 +6,24 @@ interface Props {
   title_zh?: string;
   date: string;
   excerpt?: string;
-  project: 'language' | 'stillness' | 'apokalyi';
+  project: 'startup' | 'language' | 'stillness';
   readingTime?: number;
   autoTranslated?: boolean;
+  englishOnly?: boolean;
 }
 
-const { title, title_zh, date, excerpt, project, readingTime, autoTranslated } = Astro.props;
+const { title, title_zh, date, excerpt, project, readingTime, autoTranslated, englishOnly = false } = Astro.props;
 
 const projectLabels = {
   language: 'Language',
   stillness: 'Stillness',
-  apokalyi: 'ApokalYi',
+  startup: 'Startup',
 };
 
 const projectRoutes = {
   language: '/language',
   stillness: '/stillness',
-  apokalyi: '/apokalyi',
+  startup: '/startup',
 };
 
 const formattedDate = new Date(date).toLocaleDateString('en-US', {
@@ -32,7 +33,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={title} description={excerpt} project={project} isPost={true}>
+<BaseLayout title={title} description={excerpt} project={project} isPost={true} englishOnly={englishOnly}>
   <!-- Reading progress bar -->
   <div class="reading-progress" id="reading-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 
